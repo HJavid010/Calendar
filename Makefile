@@ -59,3 +59,7 @@ clean:
 .PHONY: cleandep
 cleandep:
 	$(RM) $(DEP)
+
+.PHONY: run
+run: all
+	./$(APPNAME)$(EXE)
