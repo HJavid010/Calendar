@@ -12,7 +12,7 @@ APPNAME = Calendar
 EXT = .cpp
 SRCDIR = src
 OBJDIR = obj
-
+SlahorBackSlash= /
 ############## Do not change anything from here downwards! #############
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
@@ -22,10 +22,12 @@ ifneq ($(OS),Windows_NT)
   RM = rm
   DELOBJ = $(OBJ)
   EXE =
+  SlahorBackSlash= /
 else
   # Windows OS variables & settings
   DEL = del
   EXE = .exe
+  SlahorBackSlash= \
   DELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
 endif
 ########################################################################
@@ -62,4 +64,4 @@ cleandep:
 
 .PHONY: run
 run: all
-	./$(APPNAME)$(EXE)
+	.$(SlahorBackSlash)$(APPNAME)$(EXE)
