@@ -17,6 +17,7 @@ SlahorBackSlash= /
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
+MKDIR = mkdir -p
 ifneq ($(OS),Windows_NT)
   # UNIX-based OS variables & settings
   RM = rm
@@ -34,12 +35,14 @@ endif
 ####################### Targets beginning here #########################
 ########################################################################
 
-all: $(APPNAME)
+all: $(OBJDIR)/ $(APPNAME) 
 
 # Builds the app
 $(APPNAME): $(OBJ)
 	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
+%/:
+	$(MKDIR) $@
 # Creates the dependecy rules
 %.d: $(SRCDIR)/%$(EXT)
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:%.d=$(OBJDIR)/%.o) >$@
