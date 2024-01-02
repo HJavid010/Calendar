@@ -1,3 +1,9 @@
+##### Makefile 
+##### recommended compiler and make is gcc
+##### for Windows please use MinGW
+##### (after installing please put C:\msys64\ucrt64\bin and
+##### C:\msys64\usr\bin to system environment variable "Path")
+
 # Compiler settings - Can be customized.
 CC = g++
 CXXFLAGS = -std=c++11 -Wall
@@ -16,15 +22,6 @@ DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
 MKDIR = mkdir
 RM = rm
 
-ifneq ($(OS),Windows_NT)
-  # *nix OS variables & settings
-  DELOBJ = $(OBJ)
-  EXE =
-else
-  # Windows OS variables & settings
-  EXE = .exe
-  DELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
-endif
 
 ########################################################################
 ####################### Targets beginning here #########################
@@ -56,7 +53,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 # Cleans complete project
 .PHONY: clean
 clean:
-	$(RM) $(DELOBJ) $(DEP) $(APPNAME)$(EXE)
+	$(RM) $(OBJ) $(DEP) $(APPNAME)
 
 # Cleans only all files with the extension .d
 .PHONY: cleandep
@@ -66,4 +63,4 @@ cleandep:
 # run after build
 .PHONY: run
 run: all
-	./$(APPNAME)$(EXE)
+	./$(APPNAME)
