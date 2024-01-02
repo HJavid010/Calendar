@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++11 -Wall
 LDFLAGS = 
 
 # Makefile settings - Can be customized.
-APPNAME = myapp
+APPNAME = Calendar
 EXT = .cpp
 SRCDIR = src
 OBJDIR = obj
@@ -17,14 +17,17 @@ OBJDIR = obj
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
-# UNIX-based OS variables & settings
-RM = rm
-DELOBJ = $(OBJ)
-# Windows OS variables & settings
-DEL = del
-EXE = .exe
-WDELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
-
+ifneq ($(OS),Windows_NT)
+  # UNIX-based OS variables & settings
+  RM = rm
+  DELOBJ = $(OBJ)
+  EXE =
+else
+  # Windows OS variables & settings
+  DEL = del
+  EXE = .exe
+  DELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
+endif
 ########################################################################
 ####################### Targets beginning here #########################
 ########################################################################
@@ -50,20 +53,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 # Cleans complete project
 .PHONY: clean
 clean:
-	$(RM) $(DELOBJ) $(DEP) $(APPNAME)
+	$(RM) $(DELOBJ) $(DEP) $(APPNAME)$(EXE)
 
 # Cleans only all files with the extension .d
 .PHONY: cleandep
 cleandep:
 	$(RM) $(DEP)
-
-#################### Cleaning rules for Windows OS #####################
-# Cleans complete project
-.PHONY: cleanw
-cleanw:
-	$(DEL) $(WDELOBJ) $(DEP) $(APPNAME)$(EXE)
-
-# Cleans only all files with the extension .d
-.PHONY: cleandepw
-cleandepw:
-	$(DEL) $(DEP)
