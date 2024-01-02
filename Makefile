@@ -17,7 +17,7 @@ SlahorBackSlash= /
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
-ifneq ($(OS),Windows_NT)
+ifeq ($(OS),Windows_NT)
   # UNIX-based OS variables & settings
   RM = rm
   DELOBJ = $(OBJ)
@@ -25,7 +25,7 @@ ifneq ($(OS),Windows_NT)
   SlahorBackSlash= /
 else
   # Windows OS variables & settings
-  DEL = del
+  RM = del
   EXE = .exe
   SlahorBackSlash= \
   DELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
