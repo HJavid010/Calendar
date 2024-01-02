@@ -17,7 +17,7 @@ SlahorBackSlash= /
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
 OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
-MKDIR = mkdir -p
+MKDIR = mkdir
 ifneq ($(OS),Windows_NT)
   # UNIX-based OS variables & settings
   RM = rm
