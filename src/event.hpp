@@ -1,16 +1,15 @@
 #ifndef EVENT_H
 # define EVENT_H 1
-#include "date.h"
+#include "date.hpp"
 #include <iostream>
 
 struct event
 {
-    unsigned long long int id;
+    // items with id = 0 are not used yet;
+    unsigned long long int id = 0;
     std::string title;
     std::string description;
-    unsigned int year,month,day;
     date date;
 };
-
 
 #endif
