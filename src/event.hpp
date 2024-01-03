@@ -1,5 +1,5 @@
 #ifndef EVENT_H
-# define EVENT_H 1
+#define EVENT_H 1
 #include "date.hpp"
 #include <iostream>
 
