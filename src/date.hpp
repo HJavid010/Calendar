@@ -24,8 +24,10 @@ struct months{
     int size[12];
 };
 struct calendar{
+    int id;
     struct date origin;
     struct months months;
+    int IsLeapYear(int year);
 };
 
 struct calendars
