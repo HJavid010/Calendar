@@ -19,6 +19,21 @@ struct weekday
     date FirstRecurrence(date);
 };
 
+struct months{
+    std::string name[12];
+    int size[12];
+};
+struct calendar{
+    struct date origin;
+    struct months months;
+};
+
+struct calendars
+{
+    calendar gregorian;
+    calendar shamsi;
+    calendar ghamari;
+};
 
 date DayToDate(unsigned long long int);
 date SystemDate();

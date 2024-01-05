@@ -17,6 +17,7 @@ int date::Equal(date second_date)
         return 0;
     return 1;
 }
+/*
 extern date gregorian_origin = {gregorian_origin.year = 1970,
                                 gregorian_origin.month = 1,
                                 gregorian_origin.day = 1};
@@ -28,4 +29,9 @@ extern date shamsi_origin = {shamsi_origin.year = 1348,
 extern date ghamari_origin = {ghamari_origin.year = 1389,
                                 ghamari_origin.month = 10,
                                 ghamari_origin.day = 22};
-
+*/
+date DayToDate(unsigned long long int)
+{
+    date date;
+    return date;
+}
