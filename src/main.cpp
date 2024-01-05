@@ -1,9 +1,10 @@
 #include <iostream>
 using namespace std;
 int main(int argc, char const *argv[])
-{   int controller=0;
+{   
+    int controller=0;
     cout << endl << "| help: 1.Search 2.tommorow's task 3.All at Once 4.Exit |"<< endl;
-    for (size_t i = 0; i < 50; i++)
+    for (size_t i = 0; i < 57; i++)
     {
         cout << "*";
     }
@@ -14,13 +15,13 @@ int main(int argc, char const *argv[])
     }
     cout << endl << "Todays Task:";
     cout << endl ;
-    for (size_t i = 0; i < 50; i++)
+    for (size_t i = 0; i < 57; i++)
     {
         cout << "*";
     }
     cout << endl ;
     cin >> controller;
-    while (controller==4)
+    while (controller == 4)
     {
         break;
     }
