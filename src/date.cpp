@@ -1,12 +1,12 @@
 #include "date.hpp"
 int date::IsNotVaild()
 {
-    if (year < 1970)
+    if (1970 > year > 2038)
         return 1;
     if (month > 12)
-        return 2;
+        return 1 ;
     if (day > 31)
-        return 3;
+        return 1 ;
     return 0;
 }
 
