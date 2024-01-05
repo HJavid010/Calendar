@@ -1,6 +1,6 @@
 #include "event.hpp"
 
-int event::Equal(event second_event)
+int _event::Equal(_event second_event)
 {
     if (!date.Equal(second_event.date))
         return 0;

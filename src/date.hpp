@@ -3,41 +3,43 @@
 #include <ctime>
 #include <iostream>
 
-struct date
+struct _date
 {
     unsigned int year, month, day;
     int IsNotVaild();
-    int Equal(struct date);
+    int Equal(_date);
 };
 
-struct weekday
+struct _weekday
 {
     int number;
     std::string ToGeorgian();
     std::string ToShamsi();
     std::string ToGamari();
-    date FirstRecurrence(date);
+    _date FirstRecurrence(_date);
 };
 
-struct months{
+struct _months
+{
     std::string name[12];
     int size[12];
 };
-struct calendar{
-    int id;
-    struct date origin;
-    struct months months;
+struct _calendar
+{
+    unsigned int id;
+    _date origin;
+    _months months;
     int IsLeapYear(int year);
 };
 
-struct calendars
+struct _calendars
 {
-    calendar gregorian;
-    calendar shamsi;
-    calendar ghamari;
+    _calendar gregorian;
+    _calendar shamsi;
+    _calendar ghamari;
 };
 
-date DayToDate(unsigned long long int);
-date SystemDate();
+_date DayToDate(unsigned long long int);
+_date SystemDate();
 
 #endif
