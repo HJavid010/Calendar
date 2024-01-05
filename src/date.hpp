@@ -1,6 +1,6 @@
 #ifndef DATE_H
 #define DATE_H 1
-
+#include <ctime>
 #include <iostream>
 
 struct date
@@ -18,5 +18,9 @@ struct weekday
     std::string ToGamari();
     date FirstRecurrence(date);
 };
+
+
+date DayToDate(unsigned long long int);
+date SystemDate();
 
 #endif
