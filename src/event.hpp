@@ -7,14 +7,35 @@
 #define EVENT_LIST_SIZE 300
 struct _event
 {
-    // items with id = 0 are not used yet;
-    unsigned long long int id = 0;
+    std::string title;
+    std::string description;
+    _date date;
+    int Occur(_date &second_date);
+};
+
+struct _weekly_event
+{
+    std::string title;
+    std::string description;
+    int weekday;
+    int Occur(int &second_weekday);
+};
+struct _monthly_event
+{
+    std::string title;
+    std::string description;
+    int day;
+    int Occur(int &second_day);
+
+};
+struct _yearly_event
+{
     std::string title;
     std::string description;
     int recurrence;
-    unsigned long long int ddate;
-    _weekday weekday;
-    int Equal(_event);
+    int day;
+    int month;
+    int Occur(int &second_day,int &second_month);
 };
 struct _event_list
 {
@@ -24,7 +45,6 @@ struct _event_list
     int sort(_event);
     int add(_event);
     int remove(_event);
-    const int *search(std::string);
+    int *search(std::string);
 };
-
 #endif

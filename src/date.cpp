@@ -1,78 +1,29 @@
 #include "date.hpp"
-int _date::IsNotVaild()
+
+struct _calendars
 {
-    if (1970 > year > 2038)
-        return 1;
-    if (month > 12)
-        return 1 ;
-    if (day > 31)
-        return 1 ;
-    return 0;
-}
-
-int _date::Equal(_date second_date)
-
-{
-    if (year != second_date.year || month != second_date.month || day != second_date.day)
-        return 0;
-    return 1;
-}
-
-
-_date DayToDate(unsigned long long int)
-{
-    _date date;
-    return date;
-}
-
-int _calendar::IsLeapYear(int year)
-{
-    switch (id)
+    struct _shamsi
     {
-    case 0:
-        if (year % 100 && !(year % 4))
-            return 1;
-        break;
-    case 1:
-        switch (year % 33)
-        {
-        case 30:
-        case 26:
-        case 22:
-        case 17:
-        case 13:
-        case 9:
-        case 5:
-        case 1:
-            return 1;
-            break;
-        default:
-            break;
-        }
-        break;
-    case 2:
-        switch (year % 30)
-        {
-        case 29:
-        case 26:
-        case 24:
-        case 21:
-        case 18:
-        case 16:
-        case 13:
-        case 10:
-        case 7:
-        case 5:
-        case 2:
-            return 1;
-            break;
-        default:
-            break;
-        }
-        break;
-    default:
-        break;
-    }
+        unsigned int id = 0;
+        _date origin{.year = 1348, .month = 10, .day = 11};
+        std::string months[12] = {"Farvardin", "Ordibehesht", "Khordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"};
+        int IsLeapYear(int year);
+    } shamsi;
 
-    return 0;
-}
+    struct _georgian
+    {
+        unsigned int id = 1;
+        _date origin{.year = 1970, .month = 1, .day = 1};
+        std::string months[12] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        int IsLeapYear(int year);
+    } georgian;
+
+    struct _ghamari
+    {
+        unsigned int id = 2;
+        _date origin{.year = 1389, .month = 10, .day = 22};
+        std::string months[12] = {"al-Muharram", "Safar", "Rabi`al-Awwal", "Rabi`al-Thani", "Jumada`al-Ula", "Jumada`al-Thani", "Rajab", "Sha`ban", "Ramadan", "Shawwal", "Dhu`al-Qadah", "Dhu`al-Hijjah"};
+        int IsLeapYear(int year);
+    } ghamari;
+
+} calendars;
