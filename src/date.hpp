@@ -8,9 +8,9 @@
 // _date is used to store a date from any kind and functions to easily vaildate it or check equality with another.
 struct _date
 {
-    unsigned int year, month, day;
+    int year, month, day;
     int IsNotVaild();
-    int Equal(_date);
+    int Equal(_date &);
 };
 
 struct _weekday
@@ -31,10 +31,12 @@ struct _calendar
         int month_size[12];
         int year_size;
         int leap_month;
+        int origin_distance_begining;
         int IsLeapYear(int year);
     };
 
-_date DayToDate(unsigned long long int);
+_date DayToDate(int ddate, _calendar &);
+int DateToDay(_date,_calendar &);
 _date SystemDate();
 
 #endif

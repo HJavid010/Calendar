@@ -8,7 +8,8 @@ struct _calendars
         .month_name = {"Farvardin", "Ordibehesht", "Khordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"},
         .month_size = {31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29},
         .year_size = 365,
-        .leap_month = 12};
+        .leap_month = 12,
+        .origin_distance_begining = 50};
 
     _calendar georgian{
         .id = 1,
@@ -16,7 +17,8 @@ struct _calendars
         .month_name = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
         .month_size = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
         .year_size = 365,
-        .leap_month = 2};
+        .leap_month = 2,
+        .origin_distance_begining = 0};
 
     _calendar ghamari{
         .id = 2,
@@ -24,7 +26,8 @@ struct _calendars
         .month_name = {"al-Muharram", "Safar", "Rabi`al-Awwal", "Rabi`al-Thani", "Jumada`al-Ula", "Jumada`al-Thani", "Rajab", "Sha`ban", "Ramadan", "Shawwal", "Dhu`al-Qadah", "Dhu`al-Hijjah"},
         .month_size = {30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29},
         .year_size = 355,
-        .leap_month = 12};
+        .leap_month = 12,
+        .origin_distance_begining = 67};
 
 } calendars;
 
@@ -118,4 +121,25 @@ _date DayToDate(int ddate, _calendar &calendar = calendars.shamsi)
         out_date.month = 1;
     }
     return out_date;
+}
+int DateToDay(_date date, _calendar &calendar = calendars.shamsi)
+{
+    //under construction
+    /*int dday = 0;
+    while (date.year > calendar.origin.year)
+    {
+        date.year--;
+        dday += calendar.year_size + ();
+    }
+    if (date.month < calendar.origin.month || (date.month == calendar.origin.month && date.day < calendar.origin.day))
+        date.year++;
+
+    */
+}
+
+int _date::Equal(_date &second_date)
+{
+    if (day == second_date.day && month == second_date.month && year == second_date.year)
+        return 1;
+    return 0;
 }
