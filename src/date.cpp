@@ -84,32 +84,38 @@ _date DayToDate(int ddate, _calendar &calendar = calendars.shamsi)
 {
     _date out_date = calendar.origin;
     int days;
-    days = 0;
-    for (int i = out_date.month - 1; i < 12; i++)
-        days += calendar.month_size[i];
+    days = calendar.year_size;
     if (calendar.IsLeapYear(out_date.year))
         days++;
     while (ddate > days)
     {
-        ddate -= calendar.year_size +calendar.IsLeapYear(out_date.year);
+        ddate -= days;
         out_date.year++;
-        days = 0;
-        for (int i = out_date.month - 1; i < 12; i++)
-            days += calendar.month_size[i];
-        if (calendar.IsLeapYear(out_date.year))
-            days++;
+        days = calendar.year_size + calendar.IsLeapYear(out_date.year);
     };
-    days = calendar.month_size[out_date.month - 1];
-    if (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year))
-        days++;
+    days = calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year));
+
     while (ddate > days)
     {
         ddate -= days;
         out_date.month++;
-        days = calendar.month_size[out_date.month - 1];
-        if (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year))
-            days++;
+        if (out_date.month == 13)
+        {
+            out_date.year++;
+            out_date.month = 1;
+        }
+        days = calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year));
     }
     out_date.day += ddate;
+    if (out_date.day > calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year)))
+    {
+        out_date.day -= calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year));
+        out_date.month++;
+    }
+    if (out_date.month == 13)
+    {
+        out_date.year++;
+        out_date.month = 1;
+    }
     return out_date;
 }
