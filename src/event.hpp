@@ -12,7 +12,7 @@ struct _event
     std::string title;
     std::string description;
     int recurrence;
-    _date date;
+    unsigned long long int ddate;
     _weekday weekday;
     int Equal(_event);
 };
