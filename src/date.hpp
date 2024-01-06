@@ -22,13 +22,17 @@ struct _weekday
     int FirstRecurrence(int);
 };
 
-struct _months
-{
-    std::string name[12];
-    int size[12];
-};
 
-
+struct _calendar
+    {
+        unsigned int id;
+        _date origin;
+        std::string month_name[12];
+        int month_size[12];
+        int year_size;
+        int leap_month;
+        int IsLeapYear(int year);
+    };
 
 _date DayToDate(unsigned long long int);
 _date SystemDate();

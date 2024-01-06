@@ -26,7 +26,6 @@ struct _monthly_event
     std::string description;
     int day;
     int Occur(int &second_day);
-
 };
 struct _yearly_event
 {
@@ -35,16 +34,53 @@ struct _yearly_event
     int recurrence;
     int day;
     int month;
-    int Occur(int &second_day,int &second_month);
+    int Occur(int &second_day, int &second_month);
 };
 struct _event_list
 {
     _event event[EVENT_LIST_SIZE];
+    _event *event_ptr = {0};
     int real_size = EVENT_LIST_SIZE;
     int size = 0;
     int sort(_event);
     int add(_event);
     int remove(_event);
-    int *search(std::string);
+    _event *search(std::string);
+};
+
+struct _weekly_event_list
+{
+    _event event[EVENT_LIST_SIZE];
+    _event *event_ptr = {0};
+    int real_size = EVENT_LIST_SIZE;
+    int size = 0;
+    int sort(_event);
+    int add(_event);
+    int remove(_event);
+    _event *search(std::string);
+};
+
+struct _monthly_event_list
+{
+    _event event[EVENT_LIST_SIZE];
+    _event *event_ptr = {0};
+    int real_size = EVENT_LIST_SIZE;
+    int size = 0;
+    int sort(_event);
+    int add(_event);
+    int remove(_event);
+    _event *search(std::string);
+};
+
+struct _yearly_event_list
+{
+    _event event[EVENT_LIST_SIZE];
+    _event *event_ptr = {0};
+    int real_size = EVENT_LIST_SIZE;
+    int size = 0;
+    int sort(_event);
+    int add(_event);
+    int remove(_event);
+    _yearly_event *search(std::string);
 };
 #endif
