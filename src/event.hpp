@@ -5,26 +5,26 @@
 #include <iostream>
 
 #define EVENT_LIST_SIZE 300
-struct event
+struct _event
 {
     // items with id = 0 are not used yet;
     unsigned long long int id = 0;
     std::string title;
     std::string description;
     int recurrence;
-    struct date date;
-    struct weekday weekday;
-    int Equal(event);
+    unsigned long long int ddate;
+    _weekday weekday;
+    int Equal(_event);
 };
-struct event_list
+struct _event_list
 {
-    struct event event[EVENT_LIST_SIZE];
+    _event event[EVENT_LIST_SIZE];
     int real_size = EVENT_LIST_SIZE;
     int size = 0;
-    int sort(struct event);
-    int add(struct event);
-    int remove(struct event);
-    const int* search(std::string);
+    int sort(_event);
+    int add(_event);
+    int remove(_event);
+    const int *search(std::string);
 };
 
 #endif

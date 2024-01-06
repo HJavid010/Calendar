@@ -1,5 +1,5 @@
 #include "date.hpp"
-int date::IsNotVaild()
+int _date::IsNotVaild()
 {
     if (1970 > year > 2038)
         return 1;
@@ -10,10 +10,69 @@ int date::IsNotVaild()
     return 0;
 }
 
-int date::Equal(date second_date)
+int _date::Equal(_date second_date)
 
 {
     if (year != second_date.year || month != second_date.month || day != second_date.day)
         return 0;
     return 1;
+}
+
+
+_date DayToDate(unsigned long long int)
+{
+    _date date;
+    return date;
+}
+
+int _calendar::IsLeapYear(int year)
+{
+    switch (id)
+    {
+    case 0:
+        if (year % 100 && !(year % 4))
+            return 1;
+        break;
+    case 1:
+        switch (year % 33)
+        {
+        case 30:
+        case 26:
+        case 22:
+        case 17:
+        case 13:
+        case 9:
+        case 5:
+        case 1:
+            return 1;
+            break;
+        default:
+            break;
+        }
+        break;
+    case 2:
+        switch (year % 30)
+        {
+        case 29:
+        case 26:
+        case 24:
+        case 21:
+        case 18:
+        case 16:
+        case 13:
+        case 10:
+        case 7:
+        case 5:
+        case 2:
+            return 1;
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+
+    return 0;
 }
