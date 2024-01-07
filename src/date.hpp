@@ -16,7 +16,7 @@ struct _date
 struct _weekday
 {
     int number;
-    std::string ToGeorgian();
+    std::string Togregorian();
     std::string ToShamsi();
     std::string ToGamari();
     int FirstRecurrence(int);

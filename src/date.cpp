@@ -11,14 +11,14 @@ struct _calendars
         .leap_month = 12,
         .origin_distance_begining = 50};
 
-    _calendar georgian{
+    _calendar gregorian{
         .id = 1,
         .origin{.year = 1970, .month = 1, .day = 1},
         .month_name = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
         .month_size = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
         .year_size = 365,
         .leap_month = 2,
-        .origin_distance_begining = 0};
+        .origin_distance_begining = 365};
 
     _calendar ghamari{
         .id = 2,
@@ -124,17 +124,27 @@ _date DayToDate(int ddate, _calendar &calendar = calendars.shamsi)
 }
 int DateToDay(_date date, _calendar &calendar = calendars.shamsi)
 {
-    //under construction
-    /*int dday = 0;
+    int ddate = 0;
+    ddate += (calendar.IsLeapYear(date.year) && (date.month > calendar.leap_month));
+
     while (date.year > calendar.origin.year)
     {
         date.year--;
-        dday += calendar.year_size + ();
+        ddate += calendar.year_size + (calendar.IsLeapYear(date.year));
     }
-    if (date.month < calendar.origin.month || (date.month == calendar.origin.month && date.day < calendar.origin.day))
-        date.year++;
+    while (date.month > calendar.origin.month)
+    {
+        date.month--;
+        ddate += calendar.month_size[date.month - 1];
+    }
+    while (date.month < calendar.origin.month)
+    {
+        ddate -= calendar.month_size[date.month - 1];
+        date.month++;
+    }
+    ddate += (date.day - calendar.origin.day);
 
-    */
+    return ddate;
 }
 
 int _date::Equal(_date &second_date)
