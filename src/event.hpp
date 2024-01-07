@@ -83,4 +83,13 @@ struct _yearly_event_list
     int remove(_event);
     _yearly_event *search(std::string);
 };
+
+struct _events
+{
+    _event_list specific;
+    _weekly_event_list weekly;
+    _monthly_event_list monthly;
+    _yearly_event yearly;
+};
+
 #endif
