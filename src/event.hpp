@@ -10,6 +10,7 @@ struct _event
     std::string title;
     std::string description;
     _date date;
+    int IsVaild();
     int Occur(_date &second_date);
 };
 
@@ -39,13 +40,13 @@ struct _yearly_event
 struct _event_list
 {
     _event event[EVENT_LIST_SIZE];
-    _event *event_ptr = {0};
+    _event *event_ptr[EVENT_LIST_SIZE];
     int real_size = EVENT_LIST_SIZE;
     int size = 0;
-    int sort(_event);
-    int add(_event);
-    int remove(_event);
-    _event *search(std::string);
+    void Sort();
+    int Add(_event &);
+    int Remove(int);
+    _event *Search(std::string);
 };
 
 struct _weekly_event_list
@@ -54,10 +55,10 @@ struct _weekly_event_list
     _event *event_ptr = {0};
     int real_size = EVENT_LIST_SIZE;
     int size = 0;
-    int sort(_event);
-    int add(_event);
-    int remove(_event);
-    _event *search(std::string);
+    int Sort(_event);
+    int Add(_event);
+    int Remove(_event);
+    _event *Search(std::string);
 };
 
 struct _monthly_event_list
