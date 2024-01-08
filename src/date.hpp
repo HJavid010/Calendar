@@ -9,7 +9,7 @@
 struct _date
 {
     int year, month, day;
-    int IsNotVaild();
+    int IsVaild();
     int Equal(_date &);
 };
 
