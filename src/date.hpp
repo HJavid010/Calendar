@@ -11,6 +11,7 @@ struct _date
     int year, month, day;
     int IsVaild();
     int Equal(_date &);
+    int Weekday();
 };
 
 struct _weekday
@@ -22,21 +23,21 @@ struct _weekday
     int FirstRecurrence(int);
 };
 
-
 struct _calendar
-    {
-        unsigned int id;
-        _date origin;
-        std::string month_name[12];
-        int month_size[12];
-        int year_size;
-        int leap_month;
-        int origin_distance_begining;
-        int IsLeapYear(int year);
-    };
+{
+    unsigned int id;
+    _date origin;
+    std::string month_name[12];
+    int month_size[12];
+    int year_size;
+    int leap_month;
+    int IsLeapYear(int year);
+    std::string weekday_name[7];
+    int weekday_begin;
+};
 
 _date DayToDate(int ddate, _calendar &);
-int DateToDay(_date,_calendar &);
+int DateToDay(_date, _calendar &);
 _date SystemDate();
 
 #endif

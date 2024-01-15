@@ -9,7 +9,8 @@ struct _calendars
         .month_size = {31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29},
         .year_size = 365,
         .leap_month = 12,
-        .origin_distance_begining = 50};
+        .weekday_name = {"Shanbeh", "Yekshanbeh", "Doshanbeh", "Seshanbeh", "Charshanbeh", "Panjshanbeh", "Jomeh"},
+        .weekday_begin = 2};
 
     _calendar gregorian{
         .id = 1,
@@ -18,17 +19,8 @@ struct _calendars
         .month_size = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
         .year_size = 365,
         .leap_month = 2,
-        .origin_distance_begining = 365};
-
-    _calendar ghamari{
-        .id = 2,
-        .origin{.year = 1389, .month = 10, .day = 22},
-        .month_name = {"al-Muharram", "Safar", "Rabi`al-Awwal", "Rabi`al-Thani", "Jumada`al-Ula", "Jumada`al-Thani", "Rajab", "Sha`ban", "Ramadan", "Shawwal", "Dhu`al-Qadah", "Dhu`al-Hijjah"},
-        .month_size = {30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29},
-        .year_size = 355,
-        .leap_month = 12,
-        .origin_distance_begining = 67};
-
+        .weekday_name = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
+        .weekday_begin = 0};
 } calendars;
 
 int _calendar::IsLeapYear(int year)
@@ -152,4 +144,9 @@ int _date::Equal(_date &second_date)
     if (day == second_date.day && month == second_date.month && year == second_date.year)
         return 1;
     return 0;
+}
+
+int _date::Weekday()
+{
+    return (DateToDay(*this) % 7);
 }
