@@ -7,6 +7,7 @@
 #define EVENT_LIST_SIZE 300
 struct _event
 {
+    int id = 0;
     std::string title;
     std::string description;
     _date date;
@@ -14,83 +15,17 @@ struct _event
     int Occur(_date &second_date);
 };
 
-struct _weekly_event
-{
-    std::string title;
-    std::string description;
-    int weekday;
-    int Occur(int &second_weekday);
-};
-struct _monthly_event
-{
-    std::string title;
-    std::string description;
-    int day;
-    int Occur(int &second_day);
-};
-struct _yearly_event
-{
-    std::string title;
-    std::string description;
-    int recurrence;
-    int day;
-    int month;
-    int Occur(int &second_day, int &second_month);
-};
 struct _event_list
 {
     _event event[EVENT_LIST_SIZE];
     _event *event_ptr[EVENT_LIST_SIZE];
     int real_size = EVENT_LIST_SIZE;
     int size = 0;
-    void Sort();
+    // didn't find a usecase for sort function
+    // void Sort();
     int Add(_event &);
     int Remove(int);
-    _event *Search(std::string);
-};
-
-struct _weekly_event_list
-{
-    _event event[EVENT_LIST_SIZE];
-    _event *event_ptr = {0};
-    int real_size = EVENT_LIST_SIZE;
-    int size = 0;
-    int Sort(_event);
-    int Add(_event);
-    int Remove(_event);
-    _event *Search(std::string);
-};
-
-struct _monthly_event_list
-{
-    _event event[EVENT_LIST_SIZE];
-    _event *event_ptr = {0};
-    int real_size = EVENT_LIST_SIZE;
-    int size = 0;
-    int sort(_event);
-    int add(_event);
-    int remove(_event);
-    _event *search(std::string);
-};
-
-struct _yearly_event_list
-{
-    _event event[EVENT_LIST_SIZE];
-    _event *event_ptr = {0};
-    int real_size = EVENT_LIST_SIZE;
-    int size = 0;
-    int sort(_event);
-    int add(_event);
-    int remove(_event);
-    _yearly_event *search(std::string);
-};
-
-struct _events
-{
-    _event_list specific;
-    _weekly_event_list weekly;
-    _monthly_event_list monthly;
-    _yearly_event yearly;
+    int Search(std::string, _event[]);
 };
 
 #endif

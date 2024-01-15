@@ -1,62 +1,11 @@
 #include "event.hpp"
 
-_events events;
-
-int _event::Occur(_date &second_date)
-{
-    if (date.day == second_date.day && date.month == second_date.month && date.year == second_date.year)
-        return 1;
-    return 0;
-}
-
-int _weekly_event::Occur(int &second_weekday)
-{
-    if (weekday == second_weekday)
-        return 1;
-    return 0;
-}
-
-int _monthly_event::Occur(int &second_day)
-{
-    if (day == second_day)
-        return 1;
-    return 0;
-}
-
-int _yearly_event::Occur(int &second_day, int &second_month)
-{
-    if (day == second_day && month == second_month)
-        return 1;
-    return 0;
-}
 
 int _event::IsVaild()
 {
     if (title.length() != 0)
         return 1;
     return 0;
-}
-
-void _event_list::Sort()
-{
-    int sorted = 0;
-    _event *tmp;
-    while (!sorted)
-    {
-
-        sorted = 1;
-        for (int i = 0; i < size - 1; i++)
-        {
-            if (event_ptr[i] > event_ptr[i + 1])
-            {
-                sorted = 0;
-                tmp = event_ptr[i];
-                event_ptr[i] = event_ptr[i + 1];
-                event_ptr[i + 1] = tmp;
-            }
-        }
-    }
-    return;
 }
 
 int _event_list::Add(_event &new_event)
