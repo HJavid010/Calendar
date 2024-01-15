@@ -12,7 +12,7 @@ struct _event
     std::string description;
     _date date;
     int IsVaild();
-    int Occur(_date &second_date, int id);
+    int _event::Occur(int id, _date &second_date, _calendar &);
 };
 
 struct _event_list

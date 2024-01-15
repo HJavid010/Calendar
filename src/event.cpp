@@ -1,4 +1,5 @@
 #include "event.hpp"
+#include "date.cpp"
 
 int _event::IsVaild()
 {
@@ -7,7 +8,7 @@ int _event::IsVaild()
     return 0;
 }
 
-int _event::Occur(_date &second_date, int id)
+int _event::Occur(int id, _date &second_date, _calendar &calendar = calendars.shamsi)
 {
     switch (id)
     {
@@ -17,17 +18,21 @@ int _event::Occur(_date &second_date, int id)
         break;
     // yearly event
     case 1:
-        return (date.day == second_date.day && date.month == second_date.month);
+        return (date.day == second_date.day && date.month == second_date.month && date.year <= second_date.year);
         break;
     // montly event
     case 2:
-        return (date.day == second_date.day);
+        return (date.day == second_date.day && date.month <= second_date.month && date.year <= second_date.year);
         break;
+    // weakly event
     case 3:
-        return (date.day == second_date.Weekday());
+        int ddate, second_ddate;
+        ddate = DateToDay(this->date, calendar);
+        second_ddate = DateToDay(second_date, calendar);
+        return (ddate <= second_ddate && (ddate % 7 == second_ddate % 7));
         break;
     default:
-        return -1;
+        return 0;
         break;
     }
     return 0;
