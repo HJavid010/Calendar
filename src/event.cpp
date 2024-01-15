@@ -1,10 +1,35 @@
 #include "event.hpp"
 
-
 int _event::IsVaild()
 {
     if (title.length() != 0)
         return 1;
+    return 0;
+}
+
+int _event::Occur(_date &second_date, int id)
+{
+    switch (id)
+    {
+    // specific date event
+    case 0:
+        return (date.day == second_date.day && date.month == second_date.month && date.year == second_date.year);
+        break;
+    // yearly event
+    case 1:
+        return (date.day == second_date.day && date.month == second_date.month);
+        break;
+    // montly event
+    case 2:
+        return (date.day == second_date.day);
+        break;
+    case 3:
+        return (date.day == second_date.Weekday());
+        break;
+    default:
+        return -1;
+        break;
+    }
     return 0;
 }
 
@@ -41,7 +66,7 @@ int _event_list::Add(_event &new_event)
 
 int _event_list::Remove(int index)
 {
-    if (index < 0 || index > size)
+    if (index < 0 || index > size - 1)
         return 1;
     size--;
     for (int i = index; i < size; i++)

@@ -12,7 +12,7 @@ struct _event
     std::string description;
     _date date;
     int IsVaild();
-    int Occur(_date &second_date);
+    int Occur(_date &second_date, int id);
 };
 
 struct _event_list
@@ -25,7 +25,7 @@ struct _event_list
     // void Sort();
     int Add(_event &);
     int Remove(int);
-    int Search(std::string, _event[]);
+    int SearchByTitle(std::string, _event[]);
 };
 
 #endif
