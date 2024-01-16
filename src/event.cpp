@@ -8,7 +8,7 @@ int _event::IsVaild()
     return 0;
 }
 
-int _event::Occur(int id, _date &second_date, _calendar &calendar = calendars.shamsi)
+int _event::Occur(_date &second_date, _calendar &calendar = calendars.shamsi)
 {
     switch (id)
     {
@@ -79,4 +79,54 @@ int _event_list::Remove(int index)
         event_ptr[i] = event_ptr[i + 1];
     }
     return 0;
+}
+
+int _event_list::SearchByString(std::string search_string, _event *search_array[])
+{
+    int search_array_size = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (IsInString(event_ptr[i]->title, search_string) || IsInString(event_ptr[i]->description, search_string))
+        {
+            search_array[search_array_size] = event_ptr[i];
+            search_array_size++;
+        }
+    }
+    return search_array_size;
+}
+
+int _event_list::SearchByDate(_date second_date, _event *search_array[])
+{
+    int search_array_size = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (event_ptr[i]->Occur(second_date))
+        {
+            search_array[search_array_size] = event_ptr[i];
+            search_array_size++;
+        }
+    }
+    return search_array_size;
+}
+
+int IsInString(std::string big_string, std::string small_string)
+{
+    int big_string_size = big_string.length();
+    int small_string_size = small_string.length();
+    int found;
+    for (int i = 0; i < big_string_size - small_string_size + 1; i++)
+    {
+        found = true;
+        for (int ii = 0; ii < small_string_size; ii++)
+        {
+            if (big_string[i + ii] != small_string[ii])
+            {
+                found = false;
+                break;
+            }
+        }
+        if (found)
+            break;
+    }
+    return found;
 }
