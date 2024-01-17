@@ -1,28 +1,5 @@
 #include "date.hpp"
 
-struct _calendars
-{
-    _calendar shamsi{
-        .id = 0,
-        .origin{.year = 1348, .month = 10, .day = 11},
-        .month_name = {"Farvardin", "Ordibehesht", "Khordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"},
-        .month_size = {31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29},
-        .year_size = 365,
-        .leap_month = 12,
-        .weekday_name = {"Shanbeh", "Yekshanbeh", "Doshanbeh", "Seshanbeh", "Charshanbeh", "Panjshanbeh", "Jomeh"},
-        .weekday_begin = 2};
-
-    _calendar gregorian{
-        .id = 1,
-        .origin{.year = 1970, .month = 1, .day = 1},
-        .month_name = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
-        .month_size = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
-        .year_size = 365,
-        .leap_month = 2,
-        .weekday_name = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
-        .weekday_begin = 0};
-} calendars;
-
 int _calendar::IsLeapYear(int year)
 {
     switch (id)
@@ -75,7 +52,7 @@ int _calendar::IsLeapYear(int year)
     return 0;
 }
 
-_date DayToDate(int ddate, _calendar &calendar = calendars.shamsi)
+_date DayToDate(int ddate, _calendar &calendar)
 {
     _date out_date = calendar.origin;
     int days;
@@ -114,7 +91,7 @@ _date DayToDate(int ddate, _calendar &calendar = calendars.shamsi)
     }
     return out_date;
 }
-int DateToDay(_date date, _calendar &calendar = calendars.shamsi)
+int DateToDay(_date date, _calendar &calendar)
 {
     int ddate = 0;
     ddate += (calendar.IsLeapYear(date.year) && (date.month > calendar.leap_month));
@@ -144,9 +121,4 @@ int _date::Equal(_date &second_date)
     if (day == second_date.day && month == second_date.month && year == second_date.year)
         return 1;
     return 0;
-}
-
-int _date::Weekday()
-{
-    return (DateToDay(*this) % 7);
 }

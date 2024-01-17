@@ -1,5 +1,5 @@
 #include "event.hpp"
-#include "date.cpp"
+
 #include <fstream>
 
 int _event::IsVaild()
@@ -9,7 +9,7 @@ int _event::IsVaild()
     return 0;
 }
 
-int _event::Occur(_date &second_date, _calendar &calendar = calendars.shamsi)
+int _event::Occur(_date &second_date, _calendar &calendar)
 {
     switch (id)
     {
@@ -96,12 +96,12 @@ int _event_list::SearchByString(std::string search_string, _event *search_array[
     return search_array_size;
 }
 
-int _event_list::SearchByDate(_date second_date, _event *search_array[])
+int _event_list::SearchByDate(_date second_date, _event *search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
-        if (event_ptr[i]->Occur(second_date))
+        if (event_ptr[i]->Occur(second_date, calendar))
         {
             search_array[search_array_size] = event_ptr[i];
             search_array_size++;
@@ -140,3 +140,8 @@ int _event_list::EventListSaveToFile(std::string filename)
         file << "\"" << ReplaceQuotationToBackslashQ(event_ptr[i]->title) << "\", \"" << ReplaceQuotationToBackslashQ(event_ptr[i]->description) << ", " << event_ptr[i]->id << ", " << event_ptr[i]->date.day << ", " << event_ptr[i]->date.month << ", " << event_ptr[i]->date.year;
         return 0;
     }
+}
+std::string ReplaceQuotationToBackslashQ(std::string text)
+{
+    return text;
+}
