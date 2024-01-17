@@ -1,5 +1,6 @@
 #include "event.hpp"
 #include "date.cpp"
+#include <fstream>
 
 int _event::IsVaild()
 {
@@ -129,4 +130,14 @@ int IsInString(std::string big_string, std::string small_string)
             break;
     }
     return found;
+}
+
+int _event_list::EventListSaveToFile(std::string filename)
+{
+    std::ofstream file(filename, std::ios_base::out);
+    for (int i = 0; i < size; i++)
+    {
+        file << "\"" << ReplaceQuotationToBackslashQ(event_ptr[i]->title) << "\""<<", \""<<ReplaceQuotationToBackslashQ(event_ptr[i]->description);
+    }
+    return 0;
 }

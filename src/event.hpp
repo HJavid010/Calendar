@@ -27,8 +27,9 @@ struct _event_list
     int Remove(int);
     int SearchByString(std::string, _event *[]);
     int SearchByDate(_date, _event *[]);
+    int EventListSaveToFile(std::string filename);
 };
-
+std::string ReplaceQuotationToBackslashQ(std::string);
 int IsInString(std::string, std::string);
 
 #endif
