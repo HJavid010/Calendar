@@ -137,7 +137,6 @@ int _event_list::EventListSaveToFile(std::string filename)
     std::ofstream file(filename, std::ios_base::out);
     for (int i = 0; i < size; i++)
     {
-        file << "\"" << ReplaceQuotationToBackslashQ(event_ptr[i]->title) << "\""<<", \""<<ReplaceQuotationToBackslashQ(event_ptr[i]->description);
+        file << "\"" << ReplaceQuotationToBackslashQ(event_ptr[i]->title) << "\", \"" << ReplaceQuotationToBackslashQ(event_ptr[i]->description) << ", " << event_ptr[i]->id << ", " << event_ptr[i]->date.day << ", " << event_ptr[i]->date.month << ", " << event_ptr[i]->date.year;
+        return 0;
     }
-    return 0;
-}
