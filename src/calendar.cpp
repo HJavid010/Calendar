@@ -50,8 +50,9 @@ int start_page();
 
 int main()
 {
-    selected_day.ddate = SystemDDate();
-    selected_day.RegenerateDates();
+    today.ddate = SystemDDate();
+    today.RegenerateDates();
+    selected_day = today;
     int controller;
     while (true)
     {
