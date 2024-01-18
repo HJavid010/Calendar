@@ -82,28 +82,28 @@ int _event_list::Remove(int index)
     return 0;
 }
 
-int _event_list::SearchByString(std::string search_string, _event *search_array[])
+int _event_list::SearchByString(std::string search_string, int search_array[])
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
         if (IsInString(event_ptr[i]->title, search_string) || IsInString(event_ptr[i]->description, search_string))
         {
-            search_array[search_array_size] = event_ptr[i];
+            search_array[search_array_size] = i;
             search_array_size++;
         }
     }
     return search_array_size;
 }
 
-int _event_list::SearchByDate(_date second_date, _event *search_array[], _calendar &calendar)
+int _event_list::SearchByDate(_date second_date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
         if (event_ptr[i]->Occur(second_date, calendar))
         {
-            search_array[search_array_size] = event_ptr[i];
+            search_array[search_array_size] = i;
             search_array_size++;
         }
     }

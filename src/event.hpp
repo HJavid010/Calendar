@@ -25,8 +25,8 @@ struct _event_list
     // void Sort();
     int Add(_event &);
     int Remove(int);
-    int SearchByString(std::string, _event *[]);
-    int SearchByDate(_date, _event *[], _calendar &);
+    int SearchByString(std::string, int[]);
+    int SearchByDate(_date, int[], _calendar &);
     int EventListSaveToFile(std::string filename);
 };
 std::string ReplaceQuotationToBackslashQ(std::string);
