@@ -1,3 +1,7 @@
+#include "date.hpp"
+#include "event.hpp"
+
+#include <iostream>
 #if defined _WIN32
 #define CLEAR system("cls");
 // clrscr(); // including header file : conio.h
@@ -6,14 +10,11 @@
 // std::cout<< u8"\033[2J\033[1;1H"; //Using ANSI Escape Sequences
 #elif defined(__APPLE__)
 #define CLEAR system("clear");
-#endif
-
-#include "date.hpp"
-#include "event.hpp"
-
+#endif // defined _WIN32
 struct _calendars
 {
     _calendar shamsi{
+        .name = "Shamsi",
         .id = 0,
         .origin{.year = 1348, .month = 10, .day = 11},
         .month_name = {"Farvardin", "Ordibehesht", "Khordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"},
@@ -24,6 +25,7 @@ struct _calendars
         .weekday_begin = 2};
 
     _calendar gregorian{
+        .name = "Gregorian",
         .id = 1,
         .origin{.year = 1970, .month = 1, .day = 1},
         .month_name = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"},
@@ -36,7 +38,68 @@ struct _calendars
 
 _calendar *default_calendar = &calendars.shamsi;
 _event_list events;
+struct _today
+{
+    int ddate;
+    _date shamsi;
+    _date gregorian;
+    void RegenerateDates();
+} selected_day, today;
+
+int start_page();
 
 int main()
 {
+    selected_day.ddate = SystemDDate();
+    selected_day.RegenerateDates();
+    int controller;
+    while (true)
+    {
+        controller = start_page();
+        switch (controller)
+        {
+        case 1:
+            selected_day.ddate += 1;
+            selected_day.RegenerateDates();
+            break;
+        case 2:
+            selected_day.ddate -= 1;
+            selected_day.RegenerateDates();
+            break;
+        case 3:
+            return 0;
+            break;
+
+        default:
+            break;
+        }
+    }
+}
+
+int start_page()
+{
+    std::string user_input;
+
+    CLEAR
+    // weekday
+    std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << std::endl;
+    std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << std::endl;
+    for (int i = 0; i < 30; i++)
+        std::cout << '*';
+    std::cout << std::endl;
+
+    std::cin >> user_input;
+    if (user_input == "N")
+        return 1;
+    if (user_input == "P")
+        return 2;
+    if (user_input == "Q")
+        return 3;
+    return 0;
+}
+
+void _today::RegenerateDates()
+{
+    shamsi = DayToDate(ddate, calendars.shamsi);
+    gregorian = DayToDate(ddate, calendars.gregorian);
 }
