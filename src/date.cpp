@@ -116,6 +116,21 @@ int DateToDay(_date date, _calendar &calendar)
     return ddate;
 }
 
+_date SystemDate(_calendar &calendar)
+{
+    time_t t;
+    time(&t);
+    int days = t / (24 * 60 * 60);
+    return DayToDate(days, calendar);
+}
+
+int _date::IsVaild(_calendar &calendar)
+{
+    if (calendar.origin.year - year > 69 || month > 12 || day > calendar.month_size[month] + (calendar.IsLeapYear(year)))
+        return 0;
+    return 1;
+}
+
 int _date::Equal(_date &second_date)
 {
     if (day == second_date.day && month == second_date.month && year == second_date.year)
