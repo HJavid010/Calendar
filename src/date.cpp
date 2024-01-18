@@ -116,12 +116,12 @@ int DateToDay(_date date, _calendar &calendar)
     return ddate;
 }
 
-_date SystemDate(_calendar &calendar)
+int SystemDDate()
 {
     time_t t;
     time(&t);
-    int days = t / (24 * 60 * 60);
-    return DayToDate(days, calendar);
+    return t / (24 * 60 * 60);
+
 }
 
 int _date::IsVaild(_calendar &calendar)

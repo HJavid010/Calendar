@@ -17,6 +17,7 @@ struct _date
 
 struct _calendar
 {
+    std::string name;
     unsigned int id;
     _date origin;
     std::string month_name[12];
@@ -30,6 +31,6 @@ struct _calendar
 
 _date DayToDate(int ddate, _calendar &);
 int DateToDay(_date, _calendar &);
-_date SystemDate(_calendar &);
+int SystemDDate();
 
 #endif
