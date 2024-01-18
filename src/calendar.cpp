@@ -35,17 +35,8 @@ struct _calendars
 } calendars;
 
 _calendar *default_calendar = &calendars.shamsi;
+_event_list events;
 
 int main()
 {
-    CLEAR
-    _event_list events;
-    _event a;
-    a.title = "tavalod felani";
-    a.description = "felani";
-    a.date.day = 1;
-    a.date.month = 2;
-    a.date.year = 1383;
-    events.Add(a);
-    std::cout << events.event_ptr[0]->title;
 }
