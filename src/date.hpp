@@ -6,21 +6,13 @@
 // _ddate is days passed from 1990-1-1 and is used for date calculation and storing.
 
 // _date is used to store a date from any kind and functions to easily vaildate it or check equality with another.
+struct _calendar;
 struct _date
 {
     int year, month, day;
-    int IsVaild();
+    int IsVaild(_calendar &);
     int Equal(_date &);
     int Weekday();
-};
-
-struct _weekday
-{
-    int number;
-    std::string Togregorian();
-    std::string ToShamsi();
-    std::string ToGamari();
-    int FirstRecurrence(int);
 };
 
 struct _calendar
@@ -38,6 +30,6 @@ struct _calendar
 
 _date DayToDate(int ddate, _calendar &);
 int DateToDay(_date, _calendar &);
-_date SystemDate();
+_date SystemDate(_calendar &);
 
 #endif
