@@ -52,6 +52,12 @@ int _calendar::IsLeapYear(int year)
     return 0;
 }
 
+int Weekday(int ddate, _calendar &calendar)
+{
+
+    return (ddate % 7 + calendar.weekday_begin) % 7;
+}
+
 _date DayToDate(int ddate, _calendar &calendar)
 {
     _date out_date = calendar.origin;
@@ -121,7 +127,6 @@ int SystemDDate()
     time_t t;
     time(&t);
     return t / (24 * 60 * 60);
-
 }
 
 int _date::IsVaild(_calendar &calendar)

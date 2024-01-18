@@ -12,7 +12,6 @@ struct _date
     int year, month, day;
     int IsVaild(_calendar &);
     int Equal(_date &);
-    int Weekday();
 };
 
 struct _calendar
@@ -28,7 +27,7 @@ struct _calendar
     std::string weekday_name[7];
     int weekday_begin;
 };
-
+int Weekday(int, _calendar &);
 _date DayToDate(int ddate, _calendar &);
 int DateToDay(_date, _calendar &);
 int SystemDDate();
