@@ -14,6 +14,7 @@ APPNAME = Calendar
 EXT = .cpp
 SRCDIR = src
 OBJDIR = obj
+BINDIR = bin
 
 ############## Do not change anything from here downwards! #############
 SRC = $(wildcard $(SRCDIR)/*$(EXT))
@@ -28,11 +29,11 @@ RM = rm
 ########################################################################
 
 # Default target
-all: $(OBJDIR)/ $(APPNAME) 
+all: $(OBJDIR)/ $(BINDIR)/ $(APPNAME) 
 
 # Builds the app
 $(APPNAME): $(OBJ)
-	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CXXFLAGS) -o $(BINDIR)/$@ $^ $(LDFLAGS)
 
 # Creates obj folder if doesn't exist 
 %/:
@@ -53,7 +54,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
 # Cleans complete project
 .PHONY: clean
 clean:
-	$(RM) $(OBJ) $(DEP) $(APPNAME)
+	$(RM) $(OBJ) $(DEP) $(BINDIR)/$(APPNAME)
 
 # Cleans only all files with the extension .d
 .PHONY: cleandep
@@ -63,4 +64,4 @@ cleandep:
 # run after build
 .PHONY: run
 run: all
-	./$(APPNAME)
+	./$(BINDIR)/$(APPNAME)
