@@ -22,7 +22,7 @@ struct _calendars
         .year_size = 365,
         .leap_month = 12,
         .weekday_name = {"Shanbeh", "Yekshanbeh", "Doshanbeh", "Seshanbeh", "Charshanbeh", "Panjshanbeh", "Jomeh"},
-        .weekday_begin = 2};
+        .weekday_begin = 5};
 
     _calendar gregorian{
         .name = "Gregorian",
@@ -33,7 +33,7 @@ struct _calendars
         .year_size = 365,
         .leap_month = 2,
         .weekday_name = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"},
-        .weekday_begin = 0};
+        .weekday_begin = 3};
 } calendars;
 
 _calendar *default_calendar = &calendars.shamsi;
@@ -83,13 +83,13 @@ int start_page()
 
     CLEAR
     // weekday
-    std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << std::endl;
-    std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << std::endl;
+    std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << "\t" << calendars.shamsi.weekday_name[Weekday(selected_day.ddate, calendars.shamsi)] << std::endl;
+    std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
     for (int i = 0; i < 30; i++)
-        std::cout << '*';
+        std::cout << "\033[32m*";
     std::cout << std::endl;
-
-    std::cin >> user_input;
+    std::cout << "\033[1;31;5m>>>\033[0m ";
+    getline(std::cin, user_input);
     if (user_input == "N")
         return 1;
     if (user_input == "P")
