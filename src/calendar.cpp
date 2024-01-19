@@ -46,7 +46,10 @@ struct _today
     void RegenerateDates();
 } selected_day, today;
 
+_date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today.shamsi;
+
 int start_page();
+int event_add_page();
 
 int main()
 {
@@ -70,7 +73,9 @@ int main()
         case 3:
             return 0;
             break;
-
+        case 4:
+            event_add_page();
+            break;
         default:
             break;
         }
@@ -88,6 +93,14 @@ int start_page()
     for (int i = 0; i < 30; i++)
         std::cout << "\033[32m*";
     std::cout << std::endl;
+    std::cout << "\033[0m>Events<" << std::endl;
+    int today_events[events.real_size];
+    int today_events_size;
+    today_events_size = events.SearchByDate(selected_day.shamsi, today_events, *default_calendar);
+    for (int i = 0; i < today_events_size; i++)
+    {
+        std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
+    }
     std::cout << "\033[1;31;5m>>>\033[0m ";
     getline(std::cin, user_input);
     if (user_input == "N")
@@ -96,6 +109,69 @@ int start_page()
         return 2;
     if (user_input == "Q")
         return 3;
+    if (user_input == "NE")
+        return 4;
+    return 0;
+}
+
+int event_add_page()
+{
+    _event new_event;
+    new_event.date = *default_selected_date;
+    std::string event_type;
+
+    std::cout << "Event type: (s)pecific date (y)early (m)onthly (w)eekly";
+    getline(std::cin, event_type);
+
+    int vaild_input = true;
+
+    if (event_type == "s")
+        new_event.id = 0;
+    else if (event_type == "y")
+        new_event.id = 1;
+    else if (event_type == "m")
+        new_event.id = 2;
+    else if (event_type == "w")
+        new_event.id = 3;
+    else
+        vaild_input = false;
+    while (!vaild_input)
+    {
+        getline(std::cin, event_type);
+
+        int vaild_input = true;
+
+        if (event_type == "s")
+            new_event.id = 0;
+        else if (event_type == "y")
+            new_event.id = 1;
+        else if (event_type == "m")
+            new_event.id = 2;
+        else if (event_type == "w")
+            new_event.id = 3;
+        else
+            vaild_input = false;
+    }
+
+    std::cout << "Title: ";
+    getline(std::cin, new_event.title);
+    if (new_event.title.length() == 0)
+    {
+        vaild_input = false;
+        while (!vaild_input)
+        {
+            vaild_input = true;
+            getline(std::cin, new_event.title);
+            if (new_event.title.length() == 0)
+                vaild_input = false;
+        }
+    }
+
+    std::cout << "Description: ";
+    getline(std::cin, new_event.description);
+
+    events.Add(new_event);
+
     return 0;
 }
 
