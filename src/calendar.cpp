@@ -37,8 +37,12 @@ struct _calendars
         .weekday_begin = 3};
 } calendars;
 
+int today_events[EVENT_LIST_SIZE];
+int today_events_size;
+
 _calendar *default_calendar = &calendars.shamsi;
 _event_list events;
+
 struct _day
 {
     int ddate;
@@ -98,14 +102,12 @@ int start_page()
 
     std::cout << "\033[0m>Events<" << std::endl;
 
-    int today_events[events.real_size];
-    int today_events_size;
     today_events_size = events.SearchByDate(selected_day.shamsi, today_events, *default_calendar);
     for (int i = 0; i < today_events_size; i++)
     {
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
-    
+
     std::cout << "\033[1;31;5m>>>\033[0m ";
     getline(std::cin, user_input);
     if (user_input == "N")
