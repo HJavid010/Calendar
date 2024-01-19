@@ -1,16 +1,6 @@
-#include "date.hpp"
-#include "event.hpp"
-
-#include <iostream>
-#if defined _WIN32
-#define CLEAR system("cls");
-// clrscr(); // including header file : conio.h
-#elif defined(__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
-#define CLEAR system("clear");
-// std::cout<< u8"\033[2J\033[1;1H"; //Using ANSI Escape Sequences
-#elif defined(__APPLE__)
-#define CLEAR system("clear");
-#endif // defined _WIN32
+#include "date.cpp"
+#include "event.cpp"
+#include "cli.hpp"
 
 struct _calendars
 {
@@ -94,24 +84,34 @@ int start_page()
 {
     std::string user_input;
 
-    CLEAR
-    // weekday
+    CLEAR BOLD;
+    std::cout << "\t\t\tCalendar V1.2" << std::endl;
+    RESET GREEN;
+    for (int i = 0; i < WIDTH; i++)
+        std::cout << "*";
+    NLINE RESET;
     std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << "\t" << calendars.shamsi.weekday_name[Weekday(selected_day.ddate, calendars.shamsi)] << std::endl;
     std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
+    GREEN;
+    for (int i = 0; i < 61; i++)
+        std::cout << "*";
+    NLINE RESET;
 
-    for (int i = 0; i < 30; i++)
-        std::cout << "\033[32m*";
-    std::cout << std::endl;
-
-    std::cout << "\033[0m>Events<" << std::endl;
+    BOLD;
+    std::cout << ">Events<" << std::endl;
+    RESET;
 
     today_events_size = events.SearchByDate(selected_day.shamsi, today_events, *default_calendar);
     for (int i = 0; i < today_events_size; i++)
     {
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
+    NLINE;
 
-    std::cout << "\033[1;31;5m>>>\033[0m ";
+    BOLD RED;
+    std::cout << ">>> ";
+    RESET
+
     getline(std::cin, user_input);
     if (user_input == "N")
         return 1;
@@ -193,12 +193,11 @@ int event_add_page()
 }
 
 int event_remove_page()
-{   
+{
     int index;
     std::cout << "Wich Event do you want to remove:" << std::endl;
     std::cin >> index;
-    index=index-1;
-    events.Remove(index);
+    events.Remove(today_events[index - 1]);
     return 0;
 }
 
