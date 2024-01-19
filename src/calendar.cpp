@@ -11,6 +11,7 @@
 #elif defined(__APPLE__)
 #define CLEAR system("clear");
 #endif // defined _WIN32
+
 struct _calendars
 {
     _calendar shamsi{
@@ -38,7 +39,7 @@ struct _calendars
 
 _calendar *default_calendar = &calendars.shamsi;
 _event_list events;
-struct _today
+struct _day
 {
     int ddate;
     _date shamsi;
@@ -90,10 +91,13 @@ int start_page()
     // weekday
     std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << "\t" << calendars.shamsi.weekday_name[Weekday(selected_day.ddate, calendars.shamsi)] << std::endl;
     std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
+
     for (int i = 0; i < 30; i++)
         std::cout << "\033[32m*";
     std::cout << std::endl;
+
     std::cout << "\033[0m>Events<" << std::endl;
+
     int today_events[events.real_size];
     int today_events_size;
     today_events_size = events.SearchByDate(selected_day.shamsi, today_events, *default_calendar);
@@ -101,6 +105,7 @@ int start_page()
     {
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
+    
     std::cout << "\033[1;31;5m>>>\033[0m ";
     getline(std::cin, user_input);
     if (user_input == "N")
@@ -134,23 +139,28 @@ int event_add_page()
     else if (event_type == "w")
         new_event.id = 3;
     else
-        vaild_input = false;
-    while (!vaild_input)
     {
-        getline(std::cin, event_type);
+        vaild_input = false;
+        while (!vaild_input)
+        {
+            getline(std::cin, event_type);
 
-        int vaild_input = true;
+            vaild_input = true;
 
-        if (event_type == "s")
-            new_event.id = 0;
-        else if (event_type == "y")
-            new_event.id = 1;
-        else if (event_type == "m")
-            new_event.id = 2;
-        else if (event_type == "w")
-            new_event.id = 3;
-        else
-            vaild_input = false;
+            if (event_type == "s")
+                new_event.id = 0;
+            else if (event_type == "y")
+                new_event.id = 1;
+            else if (event_type == "m")
+                new_event.id = 2;
+            else if (event_type == "w")
+                new_event.id = 3;
+            else
+            {
+                std::cout << event_type;
+                vaild_input = false;
+            }
+        }
     }
 
     std::cout << "Title: ";
@@ -175,7 +185,7 @@ int event_add_page()
     return 0;
 }
 
-void _today::RegenerateDates()
+void _day::RegenerateDates()
 {
     shamsi = DayToDate(ddate, calendars.shamsi);
     gregorian = DayToDate(ddate, calendars.gregorian);
