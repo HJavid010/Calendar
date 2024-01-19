@@ -55,7 +55,7 @@ _date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today
 
 int start_page();
 int event_add_page();
-
+int event_remove_page();
 int main()
 {
     today.ddate = SystemDDate();
@@ -80,6 +80,9 @@ int main()
             break;
         case 4:
             event_add_page();
+            break;
+        case 5:
+            event_remove_page();
             break;
         default:
             break;
@@ -118,6 +121,8 @@ int start_page()
         return 3;
     if (user_input == "NE")
         return 4;
+    if (user_input == "RE")
+        return 5;
     return 0;
 }
 
@@ -127,7 +132,7 @@ int event_add_page()
     new_event.date = *default_selected_date;
     std::string event_type;
 
-    std::cout << "Event type: (s)pecific date (y)early (m)onthly (w)eekly";
+    std::cout << "Event type: (s)pecific date (y)early (m)onthly (w)eekly" << std::endl;
     getline(std::cin, event_type);
 
     int vaild_input = true;
@@ -184,6 +189,16 @@ int event_add_page()
 
     events.Add(new_event);
 
+    return 0;
+}
+
+int event_remove_page()
+{   
+    int index;
+    std::cout << "Wich Event do you want to remove:" << std::endl;
+    std::cin >> index;
+    index=index-1;
+    events.Remove(index);
     return 0;
 }
 
