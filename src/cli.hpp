@@ -12,11 +12,28 @@
 #define CLEAR system("clear");
 #endif // defined _WIN32
 
+#define NLINE std::cout << std::endl;
+#define WIDTH 61
+
+#ifndef FORMATTED_OUTPUT_DEFINED
+#define FORMATTED_OUTPUT_DEFINED 1
+#ifdef FORMATTED_OUTPUT
+
 #define BOLD std::cout << "\033[1m";
 #define GREEN std::cout << "\033[32m";
 #define RED std::cout << "\033[31m";
 #define RESET std::cout << "\033[0m";
-#define NLINE std::cout << std::endl;
-#define WIDTH 61
+
+#else
+
+#define BOLD
+#define GREEN
+#define RED
+#define RESET
+
+#endif /* FORMATTED_OUTPUT */
+
+#endif /* FORMATTED_OUTPUT_DEFINED */
+
 
 #endif /* CLI_H */

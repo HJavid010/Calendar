@@ -1,5 +1,6 @@
-#include "date.cpp"
-#include "event.cpp"
+#include "date.hpp"
+#include "event.hpp"
+#define FORMATTED_OUTPUT
 #include "cli.hpp"
 
 struct _calendars
