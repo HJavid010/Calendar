@@ -137,11 +137,36 @@ int _event_list::EventListSaveToFile(std::string filename)
     std::ofstream file(filename, std::ios_base::out);
     for (int i = 0; i < size; i++)
     {
-        file << "\"" << ReplaceQuotationToBackslashQ(event_ptr[i]->title) << "\", \"" << ReplaceQuotationToBackslashQ(event_ptr[i]->description) << ", " << event_ptr[i]->id << ", " << event_ptr[i]->date.day << ", " << event_ptr[i]->date.month << ", " << event_ptr[i]->date.year;
+        file << "\"" << StandardToRegex(event_ptr[i]->title) << "\", \"" << StandardToRegex(event_ptr[i]->description) << "\", " << event_ptr[i]->id << ", " << event_ptr[i]->date.year << ", " << event_ptr[i]->date.month << ", " << event_ptr[i]->date.day << std::endl;
     }
+    file.close();
     return 0;
 }
-std::string ReplaceQuotationToBackslashQ(std::string text)
+std::string StandardToRegex(std::string text)
 {
-    return text;
+    std::string output_text;
+    int i = 0;
+    while (text[i])
+    {
+        switch (text[i])
+        {
+        case '"':
+        case '\\':
+        case '/':
+            output_text.append("\\");
+            output_text += text[i];
+            break;
+        case '\n':
+            output_text.append("\\n");
+            break;
+        case '\t':
+            output_text.append("\\t");
+            break;
+        default:
+            output_text += text[i];
+            break;
+        }
+        i++;
+    }
+    return output_text;
 }

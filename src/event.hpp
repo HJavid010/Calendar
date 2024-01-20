@@ -5,6 +5,8 @@
 #include <iostream>
 
 #define EVENT_LIST_SIZE 300
+#define EVENT_FILE "event.txt"
+
 struct _event
 {
     int id = 0;
@@ -27,9 +29,9 @@ struct _event_list
     int Remove(int);
     int SearchByString(std::string, int[]);
     int SearchByDate(_date, int[], _calendar &);
-    int EventListSaveToFile(std::string filename);
+    int EventListSaveToFile(std::string filename = EVENT_FILE);
 };
-std::string ReplaceQuotationToBackslashQ(std::string);
+std::string StandardToRegex(std::string);
 int IsInString(std::string, std::string);
 
 #endif
