@@ -189,7 +189,7 @@ int event_add_page()
     getline(std::cin, new_event.description);
 
     events.Add(new_event);
-
+    events.EventListSaveToFile();
     return 0;
 }
 
@@ -199,6 +199,8 @@ int event_remove_page()
     std::cout << "Wich Event do you want to remove:" << std::endl;
     std::cin >> index;
     events.Remove(today_events[index - 1]);
+    events.EventListSaveToFile();
+
     return 0;
 }
 
