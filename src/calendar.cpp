@@ -44,9 +44,10 @@ struct _day
 
 _date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today.shamsi;
 
-int start_page();
-int event_add_page();
-int event_remove_page();
+int Start_Page();
+int Event_Add_Page();
+int Event_Remove_Page();
+int Help_Menu();
 int main()
 {
     today.ddate = SystemDDate();
@@ -55,7 +56,7 @@ int main()
     int controller;
     while (true)
     {
-        controller = start_page();
+        controller = Start_Page();
         switch (controller)
         {
         case 1:
@@ -70,10 +71,10 @@ int main()
             return 0;
             break;
         case 4:
-            event_add_page();
+            Event_Add_Page();
             break;
         case 5:
-            event_remove_page();
+            Event_Remove_Page();
             break;
         default:
             break;
@@ -81,7 +82,7 @@ int main()
     }
 }
 
-int start_page()
+int Start_Page()
 {
     std::string user_input;
 
@@ -108,7 +109,14 @@ int start_page()
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
     NLINE;
-
+    GREEN
+    for (int i = 0; i < 61; i++)
+        std::cout << "*";
+    RESET
+    NLINE;
+    Help_Menu();
+    NLINE;
+    
     BOLD RED;
     std::cout << ">>> ";
     RESET
@@ -127,7 +135,7 @@ int start_page()
     return 0;
 }
 
-int event_add_page()
+int Event_Add_Page()
 {
     _event new_event;
     new_event.date = *default_selected_date;
@@ -193,7 +201,7 @@ int event_add_page()
     return 0;
 }
 
-int event_remove_page()
+int Event_Remove_Page()
 {
     int index;
     std::cout << "Wich Event do you want to remove:" << std::endl;
@@ -208,4 +216,23 @@ void _day::RegenerateDates()
 {
     shamsi = DayToDate(ddate, calendars.shamsi);
     gregorian = DayToDate(ddate, calendars.gregorian);
+}
+
+int Help_Menu()
+{   
+    std::cout << "Write a command and press ";
+    NLINE;
+    std::cout << "N: Next Day";
+    NLINE;
+    std::cout << "P: Previous day";
+    NLINE;
+    std::cout << "NE: New Event";
+    NLINE;
+    std::cout << "RE: Remove Event";
+    NLINE;
+    std::cout << "ED: Event dicription";
+    NLINE;
+    std::cout << "Q: Quit";
+    NLINE;
+    return 0;
 }
