@@ -1,3 +1,4 @@
+#include "string.hpp"
 #include "date.hpp"
 #include "event.hpp"
 #define FORMATTED_OUTPUT
@@ -50,6 +51,7 @@ int Event_Remove_Page();
 int Help_Menu();
 int main()
 {
+    events.EventListLoadFromFile();
     today.ddate = SystemDDate();
     today.RegenerateDates();
     selected_day = today;
