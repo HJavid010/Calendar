@@ -5,8 +5,9 @@
 int _event::IsVaild()
 {
     if (title.length() != 0)
-        return 1;
-    return 0;
+        return 0;
+
+    return 1;
 }
 
 int _event::Occur(_date &second_date, _calendar &calendar)
@@ -44,7 +45,7 @@ int _event_list::Add(_event &new_event)
     // list is full!
     if (size == real_size)
         return 1;
-    if (!new_event.IsVaild())
+    if (new_event.IsVaild())
         return 2;
 
     int occupied = 1;
@@ -110,63 +111,50 @@ int _event_list::SearchByDate(_date second_date, int search_array[], _calendar &
     return search_array_size;
 }
 
-int IsInString(std::string big_string, std::string small_string)
-{
-    int big_string_size = big_string.length();
-    int small_string_size = small_string.length();
-    int found;
-    for (int i = 0; i < big_string_size - small_string_size + 1; i++)
-    {
-        found = true;
-        for (int ii = 0; ii < small_string_size; ii++)
-        {
-            if (big_string[i + ii] != small_string[ii])
-            {
-                found = false;
-                break;
-            }
-        }
-        if (found)
-            break;
-    }
-    return found;
-}
-
 int _event_list::EventListSaveToFile(std::string filename)
 {
-    std::ofstream file(filename, std::ios_base::out);
-    for (int i = 0; i < size; i++)
+    std::ofstream file(filename, std::ios::out);
+    if (file.is_open())
     {
-        file << "\"" << StandardToRegex(event_ptr[i]->title) << "\", \"" << StandardToRegex(event_ptr[i]->description) << "\", " << event_ptr[i]->id << ", " << event_ptr[i]->date.year << ", " << event_ptr[i]->date.month << ", " << event_ptr[i]->date.day << std::endl;
-    }
-    file.close();
-    return 0;
-}
-std::string StandardToRegex(std::string text)
-{
-    std::string output_text;
-    int i = 0;
-    while (text[i])
-    {
-        switch (text[i])
+        for (int i = 0; i < size; i++)
         {
-        case '"':
-        case '\\':
-        case '/':
-            output_text.append("\\");
-            output_text += text[i];
-            break;
-        case '\n':
-            output_text.append("\\n");
-            break;
-        case '\t':
-            output_text.append("\\t");
-            break;
-        default:
-            output_text += text[i];
-            break;
+            file << "\"" << StandardToRegex(event_ptr[i]->title) << "\", \"" << StandardToRegex(event_ptr[i]->description) << "\", " << event_ptr[i]->id << ", " << event_ptr[i]->date.year << ", " << event_ptr[i]->date.month << ", " << event_ptr[i]->date.day << std::endl;
         }
-        i++;
+        file.close();
+        return 0;
     }
-    return output_text;
+    return 1;
+}
+
+int _event_list::EventListLoadFromFile(std::string filename)
+{
+    std::ifstream file(filename, std::ios::in);
+    if (file.is_open())
+    {
+        std::string line;
+        int line_error = 0;
+        while (std::getline(file, line))
+        {
+            _event new_event;
+            int list_size;
+            std::string csjson[6];
+            list_size = LineToStringList(line, csjson);
+            if (list_size != 6)
+            {
+                line_error++;
+                continue;
+            }
+            new_event.title = RemoveQuotation(csjson[0]);
+            new_event.description = RemoveQuotation(csjson[1]);
+            new_event.id = atoi(csjson[2].c_str());
+            new_event.date.year = atoi(csjson[3].c_str());
+            new_event.date.month = atoi(csjson[4].c_str());
+            new_event.date.day = atoi(csjson[5].c_str());
+            if (Add(new_event) != 0)
+                line_error++;
+        }
+        file.close();
+        return line_error;
+    }
+    return -1;
 }

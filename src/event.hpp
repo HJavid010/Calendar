@@ -1,6 +1,7 @@
 #ifndef EVENT_H
 #define EVENT_H 1
 
+#include "string.hpp"
 #include "date.hpp"
 #include <iostream>
 
@@ -30,8 +31,7 @@ struct _event_list
     int SearchByString(std::string, int[]);
     int SearchByDate(_date, int[], _calendar &);
     int EventListSaveToFile(std::string filename = EVENT_FILE);
+    int EventListLoadFromFile(std::string filename = EVENT_FILE);
 };
-std::string StandardToRegex(std::string);
-int IsInString(std::string, std::string);
 
 #endif
