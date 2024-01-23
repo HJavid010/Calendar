@@ -54,7 +54,7 @@ int _calendar::IsLeapYear(int year)
 
 int Weekday(int ddate, _calendar &calendar)
 {
-    return (ddate % 7 +7 + calendar.weekday_begin) % 7;
+    return (ddate % 7 + 7 + calendar.weekday_begin) % 7;
 }
 
 _date DayToDate(int ddate, _calendar &calendar)
@@ -137,9 +137,16 @@ int _date::IsVaild(_calendar &calendar)
     return 1;
 }
 
-int _date::Equal(_date &second_date)
+int _date::IsEqual(_date &second_date)
 {
     if (day == second_date.day && month == second_date.month && year == second_date.year)
+        return 1;
+    return 0;
+}
+
+int _date::IsAfter(_date &second_date)
+{
+    if (year > second_date.year || (year == second_date.year && month > second_date.month) || (month == second_date.month && day > second_date.day))
         return 1;
     return 0;
 }
