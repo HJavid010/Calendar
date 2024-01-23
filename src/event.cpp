@@ -1,7 +1,5 @@
 #include "event.hpp"
 
-#include <fstream>
-
 int _event::IsVaild(_calendar &calendar)
 {
     if (title.length() == 0 || !date.IsVaild(calendar))
@@ -35,6 +33,27 @@ int _event::Occur(_date &second_date, _calendar &calendar)
     default:
         return 0;
         break;
+    }
+    return 0;
+}
+
+int _event_list::Sort()
+{
+    int sorted = false;
+    while (!sorted)
+    {
+        sorted = true;
+        for (int i = 0; i < size - 1; i++)
+        {
+            if (event_ptr[i]->date.IsAfter(event_ptr[i + 1]->date))
+            {
+                sorted = false;
+                _event *tmp_event_ptr;
+                tmp_event_ptr = event_ptr[i];
+                event_ptr[i] = event_ptr[i + 1];
+                event_ptr[i + 1] = tmp_event_ptr;
+            }
+        }
     }
     return 0;
 }
@@ -93,15 +112,45 @@ int _event_list::SearchByString(std::string search_string, int search_array[])
             search_array_size++;
         }
     }
+    int sorted = false;
+    while (!sorted)
+    {
+        sorted = true;
+        for (int i = 0; i < size - 1; i++)
+        {
+            if (event_ptr[i]->title.compare(event_ptr[i + 1]->title) > 0)
+            {
+                sorted = false;
+                _event *tmp_event_ptr;
+                tmp_event_ptr = event_ptr[i];
+                event_ptr[i] = event_ptr[i + 1];
+                event_ptr[i + 1] = tmp_event_ptr;
+            }
+        }
+    }
     return search_array_size;
 }
 
-int _event_list::SearchByDate(_date second_date, int search_array[], _calendar &calendar)
+int _event_list::OccurOnDate(_date date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
-        if (event_ptr[i]->Occur(second_date, calendar))
+        if (event_ptr[i]->Occur(date, calendar))
+        {
+            search_array[search_array_size] = i;
+            search_array_size++;
+        }
+    }
+    return search_array_size;
+}
+
+int _event_list::OccurAfter(_date date, int search_array[])
+{
+    int search_array_size = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (event_ptr[i]->date.IsEqual(date) || event_ptr[i]->date.IsAfter(date))
         {
             search_array[search_array_size] = i;
             search_array_size++;
