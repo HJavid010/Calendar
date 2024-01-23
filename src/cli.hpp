@@ -25,6 +25,7 @@
 #define RED std::cout << "\x1b[31m";
 #define RESET std::cout << "\x1b[0m";
 #define BACKLINE std::cout << "\x1b[1F\x1b[2K";
+
 #else
 
 #define BOLD

@@ -1,3 +1,4 @@
+#define FORMATTED_OUTPUT
 #include "cli.hpp"
 
 int UserInput(std::string prompt_text, std::string error_text, std::string options_list[], int options_number, int *argument)
@@ -8,12 +9,11 @@ int UserInput(std::string prompt_text, std::string error_text, std::string optio
 
     for (int i = 0; i < options_number; i++)
     {
-        int found = 1;
-        int lenght = options_list[i].length();
+        long unsigned int lenght = options_list[i].length();
         if (options_list[i][lenght - 1] == ' ')
         {
             int equal = true;
-            for (int ii = 0; ii < lenght; ii++)
+            for (unsigned long int ii = 0; ii < lenght; ii++)
             {
                 if (options_list[i][ii] != tolower(user_input[ii]))
                 {
@@ -24,15 +24,17 @@ int UserInput(std::string prompt_text, std::string error_text, std::string optio
             if (equal)
             {
                 *argument = atoi(&user_input[lenght]);
+                if (*argument == 0)
+                    continue;
+                return i;
             }
-            return i;
         }
         else
         {
             if (user_input.length() != lenght)
                 continue;
             int equal = true;
-            for (int ii = 0; ii < lenght; ii++)
+            for (unsigned long int ii = 0; ii < lenght; ii++)
             {
                 if (options_list[i][ii] != tolower(user_input[ii]))
                 {
@@ -43,7 +45,6 @@ int UserInput(std::string prompt_text, std::string error_text, std::string optio
             if (equal)
             {
                 return i;
-                break;
             }
         }
     }
@@ -58,14 +59,13 @@ int UserInput(std::string prompt_text, std::string error_text, std::string optio
         getline(std::cin, user_input);
         for (int i = 0; i < options_number; i++)
         {
-            int found = 1;
-            int lenght = options_list[i].length();
+            long unsigned int lenght = options_list[i].length();
             if (options_list[i][lenght - 1] == ' ')
             {
                 int equal = true;
-                for (int ii = 0; ii < lenght; ii++)
+                for (unsigned long int ii = 0; ii < lenght; ii++)
                 {
-                    if (options_list[i][ii] != user_input[ii])
+                    if (options_list[i][ii] != tolower(user_input[ii]))
                     {
                         equal = false;
                         break;
@@ -74,17 +74,19 @@ int UserInput(std::string prompt_text, std::string error_text, std::string optio
                 if (equal)
                 {
                     *argument = atoi(&user_input[lenght]);
+                    if (*argument == 0)
+                        continue;
+                    return i;
                 }
-                return i;
             }
             else
             {
                 if (user_input.length() != lenght)
                     continue;
                 int equal = true;
-                for (int ii = 0; ii < lenght; ii++)
+                for (unsigned long int ii = 0; ii < lenght; ii++)
                 {
-                    if (options_list[i][ii] != user_input[ii])
+                    if (options_list[i][ii] != tolower(user_input[ii]))
                     {
                         equal = false;
                         break;
@@ -93,7 +95,6 @@ int UserInput(std::string prompt_text, std::string error_text, std::string optio
                 if (equal)
                 {
                     return i;
-                    break;
                 }
             }
         }

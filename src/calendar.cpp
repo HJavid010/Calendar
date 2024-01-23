@@ -1,8 +1,8 @@
-#include "string.cpp"
-#include "date.cpp"
-#include "event.cpp"
+#include "string.hpp"
+#include "date.hpp"
+#include "event.hpp"
 #define FORMATTED_OUTPUT
-#include "cli.cpp"
+#include "cli.hpp"
 
 struct _calendars
 {
@@ -123,7 +123,7 @@ int Start_Page()
     for (int i = 0; i < 61; i++)
         std::cout << "*";
     RESET;
-    
+
     NLINE;
     Help_Menu();
     NLINE;
@@ -138,9 +138,9 @@ int Event_Add_Page()
 {
     _event new_event;
     new_event.date = *default_selected_date;
-    int event_type;
+
     std::string options[] = {"s", "y", "m", "w"};
-    event_type = UserInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, 4);
+    new_event.id = UserInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, 4);
 
     int vaild_input;
     std::cout << "Title: ";
