@@ -4,7 +4,7 @@
 
 int _event::IsVaild(_calendar &calendar)
 {
-    if (title.length() != 0 || date.IsVaild(calendar))
+    if (title.length() == 0 || !date.IsVaild(calendar))
         return 0;
     return 1;
 }
@@ -44,7 +44,7 @@ int _event_list::Add(_event &new_event, _calendar &calendar)
     // list is full!
     if (size == real_size)
         return 1;
-    if (new_event.IsVaild(calendar))
+    if (!new_event.IsVaild(calendar))
         return 2;
 
     int occupied = 1;
