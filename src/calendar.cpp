@@ -146,9 +146,8 @@ int Event_Add_Page()
     new_event.date = *default_selected_date;
     std::string event_type;
 
-    std::cout << "Event type: (s)pecific date (y)early (m)onthly (w)eekly" << std::endl;
+    std::cout << "Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ";
     getline(std::cin, event_type);
-
     int vaild_input = true;
 
     if (event_type == "s")
@@ -162,8 +161,13 @@ int Event_Add_Page()
     else
     {
         vaild_input = false;
+        BACKLINE;
         while (!vaild_input)
         {
+
+            std::cout << "Wrong Input!" << std::endl
+                      << "Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ";
+
             getline(std::cin, event_type);
 
             vaild_input = true;
@@ -178,7 +182,7 @@ int Event_Add_Page()
                 new_event.id = 3;
             else
             {
-                std::cout << event_type;
+                BACKLINE BACKLINE;
                 vaild_input = false;
             }
         }
@@ -189,12 +193,19 @@ int Event_Add_Page()
     if (new_event.title.length() == 0)
     {
         vaild_input = false;
+        BACKLINE;
         while (!vaild_input)
         {
-            vaild_input = true;
+
+            std::cout << "Title can't be empty" << std::endl
+                      << "Title: ";
             getline(std::cin, new_event.title);
-            if (new_event.title.length() == 0)
-                vaild_input = false;
+            if (new_event.title.length() != 0)
+                vaild_input = true;
+            else
+            {
+                BACKLINE BACKLINE;
+            }
         }
     }
 
