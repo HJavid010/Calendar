@@ -4,6 +4,7 @@
 #include "string.hpp"
 #include "date.hpp"
 #include <iostream>
+#include <fstream>
 
 #define EVENT_LIST_SIZE 300
 #define EVENT_FILE "event.txt"
@@ -25,11 +26,12 @@ struct _event_list
     int real_size = EVENT_LIST_SIZE;
     int size = 0;
     // didn't find a usecase for sort function
-    // void Sort();
+    int Sort();
     int Add(_event &, _calendar &);
     int Remove(int);
     int SearchByString(std::string, int[]);
-    int SearchByDate(_date, int[], _calendar &);
+    int OccurOnDate(_date, int[], _calendar &);
+    int OccurAfter(_date, int[]);
     int EventListSaveToFile(std::string filename = EVENT_FILE);
     int EventListLoadFromFile(_calendar &, std::string filename = EVENT_FILE);
 };

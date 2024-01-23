@@ -1,5 +1,6 @@
 #ifndef DATE_H
 #define DATE_H 1
+
 #include <ctime>
 #include <iostream>
 
@@ -11,7 +12,8 @@ struct _date
 {
     int year, month, day;
     int IsVaild(_calendar &);
-    int Equal(_date &);
+    int IsEqual(_date &);
+    int IsAfter(_date &);
 };
 
 struct _calendar

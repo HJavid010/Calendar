@@ -108,7 +108,7 @@ int Start_Page()
     std::cout << ">Events<" << std::endl;
     RESET;
 
-    today_events_size = events.SearchByDate(selected_day.shamsi, today_events, *default_calendar);
+    today_events_size = events.OccurOnDate(selected_day.shamsi, today_events, *default_calendar);
     for (int i = 0; i < today_events_size; i++)
     {
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
