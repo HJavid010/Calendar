@@ -1,8 +1,8 @@
-#include "string.hpp"
-#include "date.hpp"
-#include "event.hpp"
+#include "string.cpp"
+#include "date.cpp"
+#include "event.cpp"
 #define FORMATTED_OUTPUT
-#include "cli.hpp"
+#include "cli.cpp"
 
 struct _calendars
 {
@@ -61,24 +61,24 @@ int main()
         controller = Start_Page();
         switch (controller)
         {
-        case 1:
+        case 0:
             selected_day.ddate += 1;
             selected_day.RegenerateDates();
             break;
-        case 2:
+        case 1:
             if (selected_day.ddate > 0)
             {
                 selected_day.ddate -= 1;
                 selected_day.RegenerateDates();
             }
             break;
-        case 3:
+        case 2:
             return 0;
             break;
-        case 4:
+        case 3:
             Event_Add_Page();
             break;
-        case 5:
+        case 4:
             Event_Remove_Page();
             break;
         default:
@@ -89,24 +89,28 @@ int main()
 
 int Start_Page()
 {
-    std::string user_input;
+    int user_input;
 
     CLEAR BOLD;
-    std::cout << "\t\t\tCalendar V1.2" << std::endl;
-    RESET GREEN;
+    std::cout << "\t\t\tCalendar V1.2";
+    NLINE RESET;
+
+    GREEN;
     for (int i = 0; i < WIDTH; i++)
         std::cout << "*";
     NLINE RESET;
+
     std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << "\t" << calendars.shamsi.weekday_name[Weekday(selected_day.ddate, calendars.shamsi)] << std::endl;
     std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
+
     GREEN;
     for (int i = 0; i < 61; i++)
         std::cout << "*";
     NLINE RESET;
 
     BOLD;
-    std::cout << ">Events<" << std::endl;
-    RESET;
+    std::cout << ">Events<";
+    NLINE RESET;
 
     today_events_size = events.OccurOnDate(selected_day.shamsi, today_events, *default_calendar);
     for (int i = 0; i < today_events_size; i++)
@@ -114,80 +118,31 @@ int Start_Page()
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
     NLINE;
-    GREEN
+
+    GREEN;
     for (int i = 0; i < 61; i++)
         std::cout << "*";
-    RESET
+    RESET;
+    
     NLINE;
     Help_Menu();
     NLINE;
 
-    BOLD RED;
-    std::cout << ">>> ";
-    RESET
+    std::string options[] = {"n", "p", "q", "ne", "re"};
+    user_input = UserInput("\x1b[1;31m>>> \x1b[0m", "Incorrect command!", options, 5);
 
-    getline(std::cin, user_input);
-    if (user_input == "N")
-        return 1;
-    if (user_input == "P")
-        return 2;
-    if (user_input == "Q")
-        return 3;
-    if (user_input == "NE")
-        return 4;
-    if (user_input == "RE")
-        return 5;
-    return 0;
+    return user_input;
 }
 
 int Event_Add_Page()
 {
     _event new_event;
     new_event.date = *default_selected_date;
-    std::string event_type;
+    int event_type;
+    std::string options[] = {"s", "y", "m", "w"};
+    event_type = UserInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, 4);
 
-    std::cout << "Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ";
-    getline(std::cin, event_type);
-    int vaild_input = true;
-
-    if (event_type == "s")
-        new_event.id = 0;
-    else if (event_type == "y")
-        new_event.id = 1;
-    else if (event_type == "m")
-        new_event.id = 2;
-    else if (event_type == "w")
-        new_event.id = 3;
-    else
-    {
-        vaild_input = false;
-        BACKLINE;
-        while (!vaild_input)
-        {
-
-            std::cout << "Wrong Input!" << std::endl
-                      << "Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ";
-
-            getline(std::cin, event_type);
-
-            vaild_input = true;
-
-            if (event_type == "s")
-                new_event.id = 0;
-            else if (event_type == "y")
-                new_event.id = 1;
-            else if (event_type == "m")
-                new_event.id = 2;
-            else if (event_type == "w")
-                new_event.id = 3;
-            else
-            {
-                BACKLINE BACKLINE;
-                vaild_input = false;
-            }
-        }
-    }
-
+    int vaild_input;
     std::cout << "Title: ";
     getline(std::cin, new_event.title);
     if (new_event.title.length() == 0)
