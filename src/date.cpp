@@ -54,13 +54,14 @@ int _calendar::IsLeapYear(int year)
 
 int Weekday(int ddate, _calendar &calendar)
 {
-
-    return (ddate % 7 + calendar.weekday_begin) % 7;
+    return (ddate % 7 +7 + calendar.weekday_begin) % 7;
 }
 
 _date DayToDate(int ddate, _calendar &calendar)
 {
     _date out_date = calendar.origin;
+    if (ddate < 0)
+        return out_date;
     int days;
     days = calendar.year_size;
     if (calendar.IsLeapYear(out_date.year))

@@ -51,7 +51,7 @@ int Event_Remove_Page();
 int Help_Menu();
 int main()
 {
-    events.EventListLoadFromFile();
+    events.EventListLoadFromFile(*default_calendar);
     today.ddate = SystemDDate();
     today.RegenerateDates();
     selected_day = today;
@@ -66,8 +66,11 @@ int main()
             selected_day.RegenerateDates();
             break;
         case 2:
-            selected_day.ddate -= 1;
-            selected_day.RegenerateDates();
+            if (selected_day.ddate > 0)
+            {
+                selected_day.ddate -= 1;
+                selected_day.RegenerateDates();
+            }
             break;
         case 3:
             return 0;
@@ -118,7 +121,7 @@ int Start_Page()
     NLINE;
     Help_Menu();
     NLINE;
-    
+
     BOLD RED;
     std::cout << ">>> ";
     RESET
@@ -198,7 +201,7 @@ int Event_Add_Page()
     std::cout << "Description: ";
     getline(std::cin, new_event.description);
 
-    events.Add(new_event);
+    events.Add(new_event, *default_calendar);
     events.EventListSaveToFile();
     return 0;
 }
@@ -221,7 +224,7 @@ void _day::RegenerateDates()
 }
 
 int Help_Menu()
-{   
+{
     std::cout << "Write a command and press ";
     NLINE;
     std::cout << "N: Next Day";

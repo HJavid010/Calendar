@@ -14,7 +14,7 @@ struct _event
     std::string title;
     std::string description;
     _date date;
-    int IsVaild();
+    int IsVaild(_calendar &);
     int Occur(_date &second_date, _calendar &);
 };
 
@@ -26,12 +26,12 @@ struct _event_list
     int size = 0;
     // didn't find a usecase for sort function
     // void Sort();
-    int Add(_event &);
+    int Add(_event &, _calendar &);
     int Remove(int);
     int SearchByString(std::string, int[]);
     int SearchByDate(_date, int[], _calendar &);
     int EventListSaveToFile(std::string filename = EVENT_FILE);
-    int EventListLoadFromFile(std::string filename = EVENT_FILE);
+    int EventListLoadFromFile(_calendar &, std::string filename = EVENT_FILE);
 };
 
 #endif

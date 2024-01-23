@@ -2,11 +2,10 @@
 
 #include <fstream>
 
-int _event::IsVaild()
+int _event::IsVaild(_calendar &calendar)
 {
-    if (title.length() != 0)
+    if (title.length() != 0 || date.IsVaild(calendar))
         return 0;
-
     return 1;
 }
 
@@ -40,12 +39,12 @@ int _event::Occur(_date &second_date, _calendar &calendar)
     return 0;
 }
 
-int _event_list::Add(_event &new_event)
+int _event_list::Add(_event &new_event, _calendar &calendar)
 {
     // list is full!
     if (size == real_size)
         return 1;
-    if (new_event.IsVaild())
+    if (new_event.IsVaild(calendar))
         return 2;
 
     int occupied = 1;
@@ -126,7 +125,7 @@ int _event_list::EventListSaveToFile(std::string filename)
     return 1;
 }
 
-int _event_list::EventListLoadFromFile(std::string filename)
+int _event_list::EventListLoadFromFile(_calendar &calendar, std::string filename)
 {
     std::ifstream file(filename, std::ios::in);
     if (file.is_open())
@@ -150,7 +149,7 @@ int _event_list::EventListLoadFromFile(std::string filename)
             new_event.date.year = atoi(csjson[3].c_str());
             new_event.date.month = atoi(csjson[4].c_str());
             new_event.date.day = atoi(csjson[5].c_str());
-            if (Add(new_event) != 0)
+            if (Add(new_event, calendar) != 0)
                 line_error++;
         }
         file.close();

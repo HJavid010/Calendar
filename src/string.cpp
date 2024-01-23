@@ -125,8 +125,8 @@ int LineToStringList(std::string text, std::string out_text[])
         {
             i++;
         }
-        if (array_size > 6)
-            return -2;
+        if (array_size == 6)
+            return array_size;
     }
     return array_size;
 }
