@@ -116,3 +116,42 @@ std::string UserStringInput(std::string prompt_text, bool multi_line, std::strin
         return user_input;
     }
 }
+
+_date UserDateInput(std::string prompt_text, std::string error_text, _calendar calendar)
+{
+    _date date;
+
+    std::string user_input;
+    bool first_error = true;
+
+    while (true)
+    {
+        std::cout << prompt_text;
+        getline(std::cin, user_input);
+        // YYYY/MM/DD
+        if (user_input.length() >= 8 && user_input.length() <= 10)
+        {
+            date.year = atoi(user_input.c_str());
+            date.month = atoi(user_input.c_str() + 5);
+            if (!isdigit(user_input[6]))
+                date.day = atoi(user_input.c_str() + 7);
+            else
+                date.day = atoi(user_input.c_str() + 8);
+
+            if (date.IsVaild(calendar))
+                return date;
+        }
+
+        if (first_error)
+        {
+            BACKLINE;
+            first_error = false;
+        }
+        else
+        {
+            BACKLINE BACKLINE;
+        }
+
+        std::cout << error_text << std::endl;
+    }
+}

@@ -47,7 +47,9 @@ _date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today
 
 int Start_Page(int *);
 int Event_Add_Page();
-void header();
+void Header();
+int Event_Search_String(std::string);
+void Line();
 
 int main()
 {
@@ -56,6 +58,7 @@ int main()
     today.RegenerateDates();
     selected_day = today;
     int controller, argument;
+    std::string search_string;
     while (true)
     {
         controller = Start_Page(&argument);
@@ -82,6 +85,15 @@ int main()
             events.Remove(today_events[argument - 1]);
             events.EventListSaveToFile();
             break;
+        case 5:
+            *default_selected_date = UserDateInput("Enter a date:", "haha!", *default_calendar);
+            selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
+            selected_day.RegenerateDates();
+            break;
+        case 6:
+            search_string = UserStringInput("string to search:", false, "error!");
+            Event_Search_String(search_string);
+            break;
         default:
             break;
         }
@@ -93,19 +105,12 @@ int Start_Page(int *argument)
     int user_input;
 
     CLEAR;
-    header();
-    GREEN;
-    for (int i = 0; i < WIDTH; i++)
-        std::cout << "*";
-    NLINE RESET;
+    Header();
 
     std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << "\t" << calendars.shamsi.weekday_name[Weekday(selected_day.ddate, calendars.shamsi)] << std::endl;
     std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
 
-    GREEN;
-    for (int i = 0; i < 61; i++)
-        std::cout << "*";
-    NLINE RESET;
+    Line();
 
     BOLD;
     std::cout << ">Events<";
@@ -116,25 +121,23 @@ int Start_Page(int *argument)
     {
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
-    NLINE;
 
-    GREEN;
-    for (int i = 0; i < 61; i++)
-        std::cout << "*";
+    Line();
+
+    BOLD;
+    std::cout << "Write a command and press \"Enter\"" << std::endl;
     RESET;
-
-    NLINE;
-    std::cout << "\x1b[1mCommands \x1b[0m" << std::endl
-              << "N: Next Day" << std::endl
+    std::cout << "N: Next Day" << std::endl
               << "P: Previous day" << std::endl
               << "NE: New Event" << std::endl
               << "RE n: Remove #n Event" << std::endl
-              << "ED n: Show #n Event" << std::endl
+              << "SE n: Show #n Event" << std::endl
+              << "GD: Goto Date" << std::endl
               << "Q: Quit" << std::endl;
     NLINE;
 
-    std::string options[] = {"n", "p", "q", "ne", "re "};
-    user_input = UserOptionInput("\x1b[1;31m>>> \x1b[0m", "Incorrect command!", options, 5, argument);
+    std::string options[] = {"n", "p", "q", "ne", "re ", "gd", "se"};
+    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, 7, argument);
 
     return user_input;
 }
@@ -154,15 +157,45 @@ int Event_Add_Page()
     return 0;
 }
 
-void header()
+void Header()
 {
     BOLD;
-    std::cout << "\t\t\tCalendar V0.3" << std::endl;
+    std::cout << "\t\t\tCalendar V0.4" << std::endl;
     RESET;
+    Line();
 }
-
+void Line()
+{
+    GREEN;
+    for (int i = 0; i < WIDTH; i++)
+        std::cout << "*";
+    NLINE RESET;
+}
 void _day::RegenerateDates()
 {
+    if (ddate < 0)
+        ddate = 0;
     shamsi = DayToDate(ddate, calendars.shamsi);
     gregorian = DayToDate(ddate, calendars.gregorian);
+}
+
+int Event_Search_String(std::string search_string)
+{
+    CLEAR;
+    int result[events.real_size], result_size = 0;
+    for (int i = 0; i < events.size; i++)
+    {
+        if (IsInString(events.event_ptr[i]->title, search_string))
+        {
+            result[result_size] = i;
+            result_size++;
+        }
+    }
+    Header();
+    for (int i = 0; i < result_size; i++)
+    {
+        std::cout << i + 1 << "- " << events.event_ptr[result[i]]->title << std::endl;
+    }
+    getchar();
+    return 0;
 }

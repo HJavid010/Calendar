@@ -39,7 +39,7 @@ int IsInString(std::string big_string, std::string small_string)
         found = true;
         for (int ii = 0; ii < small_string_size; ii++)
         {
-            if (big_string[i + ii] != small_string[ii])
+            if (tolower(big_string[i + ii]) != tolower(small_string[ii]))
             {
                 found = false;
                 break;
@@ -51,7 +51,7 @@ int IsInString(std::string big_string, std::string small_string)
     return found;
 }
 
-int LineToStringList(std::string text, std::string out_text[])
+int LineToStringList(std::string text, std::string out_text[], int out_size)
 {
     int array_size = 0;
     int i = 0;
@@ -125,7 +125,7 @@ int LineToStringList(std::string text, std::string out_text[])
         {
             i++;
         }
-        if (array_size == 6)
+        if (array_size == out_size)
             return array_size;
     }
     return array_size;

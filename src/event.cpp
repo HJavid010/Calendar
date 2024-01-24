@@ -185,10 +185,10 @@ int _event_list::EventListLoadFromFile(_calendar &calendar, std::string filename
         while (std::getline(file, line))
         {
             _event new_event;
-            int list_size;
-            std::string csjson[6];
-            list_size = LineToStringList(line, csjson);
-            if (list_size != 6)
+            int list_size, expected_size = 6;
+            std::string csjson[expected_size];
+            list_size = LineToStringList(line, csjson, expected_size);
+            if (list_size != expected_size)
             {
                 line_error++;
                 continue;

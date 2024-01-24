@@ -2,6 +2,7 @@
 #define CLI_H 1
 
 #include <iostream>
+#include "date.hpp"
 
 #if defined _WIN32
 #define CLEAR system("cls");
@@ -25,6 +26,7 @@
 #define RED std::cout << "\x1b[31m";
 #define RESET std::cout << "\x1b[0m";
 #define BACKLINE std::cout << "\x1b[1F\x1b[2K";
+#define COMMAND_STRING "\x1b[1;31m>>> \x1b[0m"
 
 #else
 
@@ -33,6 +35,7 @@
 #define RED
 #define RESET
 #define BACKLINE
+#define COMMAND_STRING ">>> "
 
 #endif /* FORMATTED_OUTPUT */
 
@@ -40,5 +43,6 @@
 
 int UserOptionInput(std::string, std::string, std::string[], int, int *arguman = 0);
 std::string UserStringInput(std::string, bool multi_line = true, std::string error_text = "");
+_date UserDateInput(std::string, std::string, _calendar);
 
 #endif /* CLI_H */
