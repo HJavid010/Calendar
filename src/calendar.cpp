@@ -44,6 +44,7 @@ _date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today
 
 int Start_Page();
 int Event_Add();
+int Task_Add();
 
 int Event_Search_String_Page(std::string);
 
@@ -61,6 +62,7 @@ int main()
 
 int Start_Page()
 {
+    static std::string message;
     int user_input;
 
     CLEAR;
@@ -94,14 +96,20 @@ int Start_Page()
 
     for (int i = 0; i < today_tasks_size; i++)
     {
-        std::cout << i + 1 << "- " << events.event_ptr[today_tasks[i]]->title << std::endl;
+        std::cout << i + 1 << "- " << events.event_ptr[today_tasks[i]]->title;
+        if (events.event_ptr[today_tasks[i]]->id == 5)
+        {
+            std::cout << " **DONE**";
+        }
+        NLINE;
     }
     NLINE;
 
     Line();
 
     BOLD;
-    std::cout << "Write a command and press \"Enter\"" << std::endl;
+    std::cout << message << std::endl
+              << "Write a command and press \"Enter\"" << std::endl;
     RESET;
     std::cout << "N:\tNext Day" << std::endl
               << "P:\tPrevious day" << std::endl
@@ -126,20 +134,43 @@ int Start_Page()
     case 0:
         selected_day.ddate += 1;
         selected_day.RegenerateDates();
+        message = "";
         break;
     case 1:
         if (selected_day.ddate > 0)
         {
             selected_day.ddate -= 1;
             selected_day.RegenerateDates();
+            message = "";
         }
+        else
+            message = "can't go back!";
         break;
 
     case 2:
         Event_Add();
+        message = "";
+        break;
+    case 3:
+        Task_Add();
+        message = "";
         break;
     case 4:
+        if (argument > today_events_size)
+        {
+            message = "out of range!";
+            break;
+        }
         events.Remove(today_events[argument - 1]);
+        events.EventListSaveToFile();
+        break;
+    case 5:
+        if (argument < 1 || argument > today_tasks_size + 1)
+        {
+            message = "out of range!";
+            break;
+        }
+        events.Remove(today_tasks[argument - 1]);
         events.EventListSaveToFile();
         break;
     /*case 5:
@@ -172,6 +203,20 @@ int Event_Add()
     new_event.description = UserStringInput("Description: ");
 
     events.Add(new_event, *default_calendar);
+    events.EventListSaveToFile();
+    return 0;
+}
+
+int Task_Add()
+{
+    _event new_task;
+    new_task.date = *default_selected_date;
+
+    new_task.id = 4;
+    new_task.title = UserStringInput("Title: ", false, "Title can't be empty!");
+    new_task.description = UserStringInput("Description: ");
+
+    events.Add(new_task, *default_calendar);
     events.EventListSaveToFile();
     return 0;
 }
