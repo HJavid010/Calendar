@@ -44,5 +44,7 @@
 int UserOptionInput(std::string, std::string, std::string[], int, int *arguman = 0);
 std::string UserStringInput(std::string, bool multi_line = true, std::string error_text = "");
 _date UserDateInput(std::string, std::string, _calendar);
+void Header();
+void Line();
 
 #endif /* CLI_H */

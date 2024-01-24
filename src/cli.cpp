@@ -155,3 +155,18 @@ _date UserDateInput(std::string prompt_text, std::string error_text, _calendar c
         std::cout << error_text << std::endl;
     }
 }
+
+void Header()
+{
+    BOLD;
+    std::cout << "\t\t\tCalendar V0.4" << std::endl;
+    RESET;
+    Line();
+}
+void Line()
+{
+    GREEN;
+    for (int i = 0; i < WIDTH; i++)
+        std::cout << "*";
+    NLINE RESET;
+}

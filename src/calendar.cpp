@@ -29,9 +29,6 @@ struct _calendars
         .weekday_begin = 3};
 } calendars;
 
-int today_events[EVENT_LIST_SIZE];
-int today_events_size;
-
 _calendar *default_calendar = &calendars.shamsi;
 _event_list events;
 
@@ -45,11 +42,10 @@ struct _day
 
 _date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today.shamsi;
 
-int Start_Page(int *);
-int Event_Add_Page();
-void Header();
-int Event_Search_String(std::string);
-void Line();
+int Start_Page();
+int Event_Add();
+
+int Event_Search_String_Page(std::string);
 
 int main()
 {
@@ -57,50 +53,13 @@ int main()
     today.ddate = SystemDDate();
     today.RegenerateDates();
     selected_day = today;
-    int controller, argument;
-    std::string search_string;
-    while (true)
+    while (Start_Page())
     {
-        controller = Start_Page(&argument);
-        switch (controller)
-        {
-        case 0:
-            selected_day.ddate += 1;
-            selected_day.RegenerateDates();
-            break;
-        case 1:
-            if (selected_day.ddate > 0)
-            {
-                selected_day.ddate -= 1;
-                selected_day.RegenerateDates();
-            }
-            break;
-        case 2:
-            return 0;
-            break;
-        case 3:
-            Event_Add_Page();
-            break;
-        case 4:
-            events.Remove(today_events[argument - 1]);
-            events.EventListSaveToFile();
-            break;
-        case 5:
-            *default_selected_date = UserDateInput("Enter a date:", "haha!", *default_calendar);
-            selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
-            selected_day.RegenerateDates();
-            break;
-        case 6:
-            search_string = UserStringInput("string to search:", false, "error!");
-            Event_Search_String(search_string);
-            break;
-        default:
-            break;
-        }
     }
+    return 0;
 }
 
-int Start_Page(int *argument)
+int Start_Page()
 {
     int user_input;
 
@@ -116,39 +75,99 @@ int Start_Page(int *argument)
     std::cout << ">Events<";
     NLINE RESET;
 
-    today_events_size = events.OccurOnDate(selected_day.shamsi, today_events, *default_calendar);
+    int today_events[EVENT_LIST_SIZE];
+    int today_events_size;
+    today_events_size = events.EventsOccurOnDate(selected_day.shamsi, today_events, *default_calendar);
+
     for (int i = 0; i < today_events_size; i++)
     {
         std::cout << i + 1 << "- " << events.event_ptr[today_events[i]]->title << std::endl;
     }
+
+    NLINE BOLD;
+    std::cout << ">Tasks<" << std::endl;
+    RESET;
+
+    int today_tasks[EVENT_LIST_SIZE];
+    int today_tasks_size;
+    today_tasks_size = events.TasksOccurOnDate(selected_day.shamsi, today_tasks, *default_calendar);
+
+    for (int i = 0; i < today_tasks_size; i++)
+    {
+        std::cout << i + 1 << "- " << events.event_ptr[today_tasks[i]]->title << std::endl;
+    }
+    NLINE;
 
     Line();
 
     BOLD;
     std::cout << "Write a command and press \"Enter\"" << std::endl;
     RESET;
-    std::cout << "N: Next Day" << std::endl
-              << "P: Previous day" << std::endl
-              << "NE: New Event" << std::endl
-              << "RE n: Remove #n Event" << std::endl
-              << "SE n: Show #n Event" << std::endl
-              << "GD: Goto Date" << std::endl
-              << "Q: Quit" << std::endl;
+    std::cout << "N:\tNext Day" << std::endl
+              << "P:\tPrevious day" << std::endl
+              << "NE:\tNew Event" << std::endl
+              << "NT:\tNew Task" << std::endl
+              << "RE n:\tRemove #n Event" << std::endl
+              << "RT n:\tRemove #n Task" << std::endl
+              << "EE n:\tEdit #n Event" << std::endl
+              << "ET n:\tEdit #n Task" << std::endl
+              //<< "GD: Goto Date" << std::endl
+              << "M:\tMore options" << std::endl
+              << "Q:\tQuit" << std::endl;
     NLINE;
 
-    std::string options[] = {"n", "p", "q", "ne", "re ", "gd", "se"};
-    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, 7, argument);
+    std::string options[] = {"n", "p", "ne", "nt", "re ", "rt ", "ee ", "et ", "m", "q"};
+    int argument;
+    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
 
-    return user_input;
+    std::string search_string;
+    switch (user_input)
+    {
+    case 0:
+        selected_day.ddate += 1;
+        selected_day.RegenerateDates();
+        break;
+    case 1:
+        if (selected_day.ddate > 0)
+        {
+            selected_day.ddate -= 1;
+            selected_day.RegenerateDates();
+        }
+        break;
+
+    case 2:
+        Event_Add();
+        break;
+    case 4:
+        events.Remove(today_events[argument - 1]);
+        events.EventListSaveToFile();
+        break;
+    /*case 5:
+        *default_selected_date = UserDateInput("Enter a date:", "haha!", *default_calendar);
+        selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
+        selected_day.RegenerateDates();
+        break;
+    case 6:
+        search_string = UserStringInput("string to search:", false, "error!");
+        Event_Search_String_Page(search_string);
+        break;*/
+    case 9:
+        return 0;
+        break;
+    default:
+        break;
+    }
+
+    return 1;
 }
 
-int Event_Add_Page()
+int Event_Add()
 {
     _event new_event;
     new_event.date = *default_selected_date;
     std::string options[] = {"s", "y", "m", "w"};
 
-    new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, 4);
+    new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, sizeof(options) / sizeof(std::string));
     new_event.title = UserStringInput("Title: ", false, "Title can't be empty!");
     new_event.description = UserStringInput("Description: ");
 
@@ -157,20 +176,6 @@ int Event_Add_Page()
     return 0;
 }
 
-void Header()
-{
-    BOLD;
-    std::cout << "\t\t\tCalendar V0.4" << std::endl;
-    RESET;
-    Line();
-}
-void Line()
-{
-    GREEN;
-    for (int i = 0; i < WIDTH; i++)
-        std::cout << "*";
-    NLINE RESET;
-}
 void _day::RegenerateDates()
 {
     if (ddate < 0)
@@ -179,7 +184,7 @@ void _day::RegenerateDates()
     gregorian = DayToDate(ddate, calendars.gregorian);
 }
 
-int Event_Search_String(std::string search_string)
+int Event_Search_String_Page(std::string search_string)
 {
     CLEAR;
     int result[events.real_size], result_size = 0;

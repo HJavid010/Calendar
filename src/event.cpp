@@ -13,6 +13,8 @@ int _event::Occur(_date &second_date, _calendar &calendar)
     {
     // specific date event
     case 0:
+    case 4:
+    case 5:
         return (date.day == second_date.day && date.month == second_date.month && date.year == second_date.year);
         break;
     // yearly event
@@ -32,6 +34,38 @@ int _event::Occur(_date &second_date, _calendar &calendar)
         break;
     default:
         return 0;
+        break;
+    }
+    return 0;
+}
+
+int _event::IsEvent()
+{
+    switch (id)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        return 1;
+        break;
+
+    default:
+        break;
+    }
+    return 0;
+}
+
+int _event::IsTask()
+{
+    switch (id)
+    {
+    case 4:
+    case 5:
+        return 1;
+        break;
+
+    default:
         break;
     }
     return 0;
@@ -132,12 +166,26 @@ int _event_list::SearchByString(std::string search_string, int search_array[])
     return search_array_size;
 }
 
-int _event_list::OccurOnDate(_date date, int search_array[], _calendar &calendar)
+int _event_list::EventsOccurOnDate(_date date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
-        if (event_ptr[i]->Occur(date, calendar))
+        if (event_ptr[i]->IsEvent() && event_ptr[i]->Occur(date, calendar))
+        {
+            search_array[search_array_size] = i;
+            search_array_size++;
+        }
+    }
+    return search_array_size;
+}
+
+int _event_list::TasksOccurOnDate(_date date, int search_array[], _calendar &calendar)
+{
+    int search_array_size = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (event_ptr[i]->IsTask() && event_ptr[i]->Occur(date, calendar))
         {
             search_array[search_array_size] = i;
             search_array_size++;

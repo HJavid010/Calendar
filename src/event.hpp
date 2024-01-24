@@ -17,6 +17,8 @@ struct _event
     _date date;
     int IsVaild(_calendar &);
     int Occur(_date &second_date, _calendar &);
+    int IsEvent();
+    int IsTask();
 };
 
 struct _event_list
@@ -30,7 +32,8 @@ struct _event_list
     int Add(_event &, _calendar &);
     int Remove(int);
     int SearchByString(std::string, int[]);
-    int OccurOnDate(_date, int[], _calendar &);
+    int EventsOccurOnDate(_date, int[], _calendar &);
+    int TasksOccurOnDate(_date, int[], _calendar &);
     int OccurAfter(_date, int[]);
     int EventListSaveToFile(std::string filename = EVENT_FILE);
     int EventListLoadFromFile(_calendar &, std::string filename = EVENT_FILE);
