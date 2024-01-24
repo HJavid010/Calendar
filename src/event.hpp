@@ -15,6 +15,7 @@ struct _event
     std::string title;
     std::string description;
     _date date;
+    int ToggleDone();
     int IsVaild(_calendar &);
     int Occur(_date &second_date, _calendar &);
     int IsEvent();

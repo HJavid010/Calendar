@@ -115,8 +115,9 @@ int Start_Page()
               << "P:\tPrevious day" << std::endl
               << "NE:\tNew Event" << std::endl
               << "NT:\tNew Task" << std::endl
-              << "RE n:\tRemove #n Event" << std::endl
-              << "RT n:\tRemove #n Task" << std::endl
+              << "DE n:\tDelete #n Event" << std::endl
+              << "DT n:\tDetete #n Task" << std::endl
+              << "TT n:\tToggle status of #n task" << std::endl
               << "EE n:\tEdit #n Event" << std::endl
               << "ET n:\tEdit #n Task" << std::endl
               //<< "GD: Goto Date" << std::endl
@@ -124,7 +125,7 @@ int Start_Page()
               << "Q:\tQuit" << std::endl;
     NLINE;
 
-    std::string options[] = {"n", "p", "ne", "nt", "re ", "rt ", "ee ", "et ", "m", "q"};
+    std::string options[] = {"n", "p", "ne", "nt", "re ", "rt ", "ee ", "et ", "m", "q", "tt "};
     int argument;
     user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
 
@@ -163,15 +164,17 @@ int Start_Page()
         }
         events.Remove(today_events[argument - 1]);
         events.EventListSaveToFile();
+        message = "";
         break;
     case 5:
-        if (argument < 1 || argument > today_tasks_size + 1)
+        if (argument < 1 || argument > today_tasks_size)
         {
             message = "out of range!";
             break;
         }
         events.Remove(today_tasks[argument - 1]);
         events.EventListSaveToFile();
+        message = "";
         break;
     /*case 5:
         *default_selected_date = UserDateInput("Enter a date:", "haha!", *default_calendar);
@@ -185,7 +188,18 @@ int Start_Page()
     case 9:
         return 0;
         break;
+    case 10:
+        if (argument < 1 || argument > today_tasks_size)
+        {
+            message = "out of range!";
+            break;
+        }
+        events.event_ptr[today_tasks[argument - 1]]->ToggleDone();
+        events.EventListSaveToFile();
+        message = "";
+        break;
     default:
+        message = "UNKNOWN ERROR!";
         break;
     }
 
@@ -246,6 +260,10 @@ int Event_Search_String_Page(std::string search_string)
     {
         std::cout << i + 1 << "- " << events.event_ptr[result[i]]->title << std::endl;
     }
-    getchar();
+    
+    std::string options[] = {"re ", "ee ", "et ", "m", "q", "tt "};
+    int argument,user_input;
+    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
+
     return 0;
 }

@@ -1,5 +1,22 @@
 #include "event.hpp"
 
+int _event::ToggleDone()
+{
+    switch (id)
+    {
+    case 4:
+        id = 5;
+        break;
+    case 5:
+        id = 4;
+        break;
+    default:
+        return 1;
+        break;
+    }
+    return 0;
+}
+
 int _event::IsVaild(_calendar &calendar)
 {
     if (title.length() == 0 || !date.IsVaild(calendar))
