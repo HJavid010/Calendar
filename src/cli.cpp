@@ -76,8 +76,13 @@ std::string UserStringInput(std::string prompt_text, bool multi_line, std::strin
     if (multi_line)
     {
         std::string return_text;
+        bool first_time = true;
         while (user_input.length() != 0)
         {
+            if (first_time)
+                first_time = false;
+            else
+                return_text += '\n';
             return_text.append(user_input);
             getline(std::cin, user_input);
         }
