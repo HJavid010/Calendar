@@ -38,6 +38,7 @@
 
 #endif /* FORMATTED_OUTPUT_DEFINED */
 
-int UserInput(std::string, std::string, std::string[], int, int *arguman = 0);
+int UserOptionInput(std::string, std::string, std::string[], int, int *arguman = 0);
+std::string UserStringInput(std::string, bool multi_line = true, std::string error_text = "");
 
 #endif /* CLI_H */

@@ -86,6 +86,7 @@ int _event_list::Add(_event &new_event, _calendar &calendar)
     event_ptr[size] = ptr;
     *ptr = new_event;
     size++;
+    Sort();
     return 0;
 }
 

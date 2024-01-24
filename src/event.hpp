@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 
-#define EVENT_LIST_SIZE 300
+#define EVENT_LIST_SIZE 3000
 #define EVENT_FILE "event.txt"
 
 struct _event

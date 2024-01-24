@@ -45,20 +45,20 @@ struct _day
 
 _date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today.shamsi;
 
-int Start_Page();
+int Start_Page(int *);
 int Event_Add_Page();
-int Event_Remove_Page();
-int Help_Menu();
+void header();
+
 int main()
 {
     events.EventListLoadFromFile(*default_calendar);
     today.ddate = SystemDDate();
     today.RegenerateDates();
     selected_day = today;
-    int controller;
+    int controller, argument;
     while (true)
     {
-        controller = Start_Page();
+        controller = Start_Page(&argument);
         switch (controller)
         {
         case 0:
@@ -79,7 +79,8 @@ int main()
             Event_Add_Page();
             break;
         case 4:
-            Event_Remove_Page();
+            events.Remove(today_events[argument - 1]);
+            events.EventListSaveToFile();
             break;
         default:
             break;
@@ -87,14 +88,12 @@ int main()
     }
 }
 
-int Start_Page()
+int Start_Page(int *argument)
 {
     int user_input;
 
-    CLEAR BOLD;
-    std::cout << "\t\t\tCalendar V1.2";
-    NLINE RESET;
-
+    CLEAR;
+    header();
     GREEN;
     for (int i = 0; i < WIDTH; i++)
         std::cout << "*";
@@ -125,11 +124,17 @@ int Start_Page()
     RESET;
 
     NLINE;
-    Help_Menu();
+    std::cout << "\x1b[1mCommands \x1b[0m" << std::endl
+              << "N: Next Day" << std::endl
+              << "P: Previous day" << std::endl
+              << "NE: New Event" << std::endl
+              << "RE n: Remove #n Event" << std::endl
+              << "ED n: Show #n Event" << std::endl
+              << "Q: Quit" << std::endl;
     NLINE;
 
-    std::string options[] = {"n", "p", "q", "ne", "re"};
-    user_input = UserInput("\x1b[1;31m>>> \x1b[0m", "Incorrect command!", options, 5);
+    std::string options[] = {"n", "p", "q", "ne", "re "};
+    user_input = UserOptionInput("\x1b[1;31m>>> \x1b[0m", "Incorrect command!", options, 5, argument);
 
     return user_input;
 }
@@ -138,72 +143,26 @@ int Event_Add_Page()
 {
     _event new_event;
     new_event.date = *default_selected_date;
-
     std::string options[] = {"s", "y", "m", "w"};
-    new_event.id = UserInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, 4);
 
-    int vaild_input;
-    std::cout << "Title: ";
-    getline(std::cin, new_event.title);
-    if (new_event.title.length() == 0)
-    {
-        vaild_input = false;
-        BACKLINE;
-        while (!vaild_input)
-        {
-
-            std::cout << "Title can't be empty" << std::endl
-                      << "Title: ";
-            getline(std::cin, new_event.title);
-            if (new_event.title.length() != 0)
-                vaild_input = true;
-            else
-            {
-                BACKLINE BACKLINE;
-            }
-        }
-    }
-
-    std::cout << "Description: ";
-    getline(std::cin, new_event.description);
+    new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, 4);
+    new_event.title = UserStringInput("Title: ", false, "Title can't be empty!");
+    new_event.description = UserStringInput("Description: ");
 
     events.Add(new_event, *default_calendar);
     events.EventListSaveToFile();
     return 0;
 }
 
-int Event_Remove_Page()
+void header()
 {
-    int index;
-    std::cout << "Wich Event do you want to remove:" << std::endl;
-    std::cin >> index;
-    events.Remove(today_events[index - 1]);
-    events.EventListSaveToFile();
-
-    return 0;
+    BOLD;
+    std::cout << "\t\t\tCalendar V0.3" << std::endl;
+    RESET;
 }
 
 void _day::RegenerateDates()
 {
     shamsi = DayToDate(ddate, calendars.shamsi);
     gregorian = DayToDate(ddate, calendars.gregorian);
-}
-
-int Help_Menu()
-{
-    std::cout << "Write a command and press ";
-    NLINE;
-    std::cout << "N: Next Day";
-    NLINE;
-    std::cout << "P: Previous day";
-    NLINE;
-    std::cout << "NE: New Event";
-    NLINE;
-    std::cout << "RE: Remove Event";
-    NLINE;
-    std::cout << "ED: Event dicription";
-    NLINE;
-    std::cout << "Q: Quit";
-    NLINE;
-    return 0;
 }
