@@ -47,7 +47,7 @@ int Event_Add();
 int Task_Add();
 int Event_Edit_Page(_event *);
 int Task_Edit_Page(_event *);
-
+int More_Options_Page();
 int Event_Search_String_Page(std::string);
 
 int main()
@@ -126,7 +126,6 @@ int Start_Page()
     std::string options[] = {"n", "p", "ne", "nt", "de ", "dt ", "tt", "ee ", "et ", "m", "q"};
     int argument;
     user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
-    int status;
     std::string search_string;
     switch (user_input)
     {
@@ -234,16 +233,14 @@ int Start_Page()
             break;
         }
         break;
-    /*case 5:
-        *default_selected_date = UserDateInput("Enter a date:", "Incorrect! (date format: YYYY MM DD)", *default_calendar);
-        selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
-        selected_day.RegenerateDates();
+    case 9:
+        while (More_Options_Page())
+        {
+        }
+        message = "";
         break;
-    case 6:
-        search_string = UserStringInput("string to search:", false, "error!");
-        Event_Search_String_Page(search_string);
-        break;*/
     case 10:
+        message = "";
         return 0;
         break;
     default:
@@ -262,7 +259,7 @@ int Event_Add()
 
     new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, sizeof(options) / sizeof(std::string));
     new_event.title = UserStringInput("Title: ", false, "Title can't be empty!");
-    new_event.description = UserStringInput("Description: ");
+    new_event.description = UserStringInput("Description (enter an empty line to): ");
 
     events.Add(new_event, *default_calendar);
     events.EventListSaveToFile();
@@ -276,7 +273,7 @@ int Task_Add()
 
     new_task.id = 4;
     new_task.title = UserStringInput("Title: ", false, "Title can't be empty!");
-    new_task.description = UserStringInput("Description: ");
+    new_task.description = UserStringInput("Description (enter an empty line to): ");
 
     events.Add(new_task, *default_calendar);
     events.EventListSaveToFile();
@@ -319,16 +316,16 @@ int Event_Edit_Page(_event *event)
             break;
         }
         std::cout << event->date.String(*default_calendar) << std::endl
-                  << BOLD << "Description: " << RESET << event->description << std::endl;
+                  << BOLD << "Description (enter an empty line to): " << RESET << event->description << std::endl;
         Line();
         std::cout << "ET:\tEdit title" << std::endl
                   << "ED:\tEdit date" << std::endl
                   << "EDE:\tEdit description" << std::endl
                   << "ETY:\tEdit event type" << std::endl
-                  << "DE:\tDelete Event" << std::endl
+                  << "D:\tDelete Event" << std::endl
                   << "B:\tGo back" << std::endl;
 
-        std::string options[] = {"et", "ed", "ede", "ety", "de", "b"};
+        std::string options[] = {"et", "ed", "ede", "ety", "d", "b"};
         int user_input;
         user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string));
         std::string type_options[] = {"s", "y", "m", "w"};
@@ -346,7 +343,7 @@ int Event_Edit_Page(_event *event)
             edited = true;
             break;
         case 2:
-            event->description = UserStringInput("Description: ");
+            event->description = UserStringInput("New Description (enter an empty line to): ");
             edited = true;
             break;
         case 3:
@@ -375,7 +372,7 @@ int Task_Edit_Page(_event *event)
         std::cout << BOLD << "Title: " << RESET << event->title << std::endl
                   << BOLD << "Date: " << RESET << event->date.String(*default_calendar) << std::endl
                   << BOLD << "Status: " << RESET << event->Status() << std::endl
-                  << BOLD << "Description: " << RESET << event->description << std::endl;
+                  << BOLD << "Description (enter an empty line to): " << RESET << event->description << std::endl;
         Line();
         std::cout << "ET:\tEdit title" << std::endl
                   << "ED:\tEdit date" << std::endl
@@ -402,7 +399,7 @@ int Task_Edit_Page(_event *event)
             edited = true;
             break;
         case 2:
-            event->description = UserStringInput("Description: ");
+            event->description = UserStringInput("New Description(enter an empty line to): ");
             edited = true;
             break;
         case 3:
@@ -421,9 +418,61 @@ int Task_Edit_Page(_event *event)
     }
 }
 
+int More_Options_Page()
+{
+
+    static std::string message;
+    int user_input;
+
+    CLEAR;
+    Header();
+
+    std::cout << calendars.shamsi.name << ":    " << selected_day.shamsi.year << "/" << selected_day.shamsi.month << "/" << selected_day.shamsi.day << "\t" << calendars.shamsi.weekday_name[Weekday(selected_day.ddate, calendars.shamsi)] << std::endl;
+    std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
+
+    Line();
+
+    std::cout << message << std::endl
+              << "GD:\tGoto Date" << std::endl
+              << "UE:\tUpcoming events" << std::endl
+              << "UT:\tUpcoming tasks" << std::endl
+              << "LT:\tShow late tasks" << std::endl
+              << "SE:\tSearch in events" << std::endl
+              << "ST:\tSearch in tasks" << std::endl
+              << "B:\tBack to homepage" << std::endl
+              << std::endl;
+
+    std::string options[] = {"gd", "ue", "ut", "lt", "se", "st", "b"};
+    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string));
+    std::string search_string;
+    switch (user_input)
+    {
+    case 0:
+        *default_selected_date = UserDateInput("Enter a date:", "Incorrect! (date format: YYYY MM DD)", *default_calendar);
+        selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
+        selected_day.RegenerateDates();
+        break;
+    case 4:
+        search_string = UserStringInput("string to search:", false, "error!");
+        while (Event_Search_String_Page(search_string))
+        {
+        }
+        break;
+    case 6:
+        return 0;
+        break;
+    default:
+        message = "UNKNOWN ERROR!";
+        break;
+    }
+
+    return 1;
+}
+
 int Event_Search_String_Page(std::string search_string)
 {
-    CLEAR;
+    std::string message;
+    int edited = false;
     int result[events.real_size], result_size = 0;
     for (int i = 0; i < events.size; i++)
     {
@@ -433,15 +482,82 @@ int Event_Search_String_Page(std::string search_string)
             result_size++;
         }
     }
-    Header();
-    for (int i = 0; i < result_size; i++)
+    while (true)
     {
-        std::cout << i + 1 << "- " << events.event_ptr[result[i]]->title << std::endl;
+        CLEAR;
+        Header();
+        if (result_size == 0)
+        {
+            std::cout << "No Result!" << std::endl
+                      << "Press enter to continue" << std::endl;
+            getline(std::cin, message);
+            return 0;
+        }
+
+        for (int i = 0; i < result_size; i++)
+        {
+            std::cout << i + 1 << "- " << events.event_ptr[result[i]]->title << std::endl;
+        }
+        Line();
+
+        std::cout << message << std::endl
+                  << "E n:\tEdit #n event" << std::endl
+                  << "D n:\tDelete #n event" << std::endl
+                  << "B:\tBack to homepage" << std::endl
+                  << std::endl;
+
+        std::string options[] = {"e ", "d ", "b"};
+        int argument, user_input;
+        user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
+        switch (user_input)
+        {
+        case 0:
+            if (argument > result_size)
+            {
+                message = "Out of range!";
+                break;
+            }
+            switch (Event_Edit_Page(events.event_ptr[result[argument - 1]]))
+            {
+            case 0:
+                break;
+            case 1:
+                edited = true;
+                events.Sort();
+                events.EventListSaveToFile();
+                message = "";
+                break;
+            case 2:
+                edited = true;
+                events.Remove(result[argument - 1]);
+                events.EventListSaveToFile();
+                message = "";
+                break;
+            default:
+                message = "UNKNOWN ERROR!";
+                break;
+            }
+            break;
+        case 1:
+            if (argument > result_size)
+            {
+                message = "Out of range!";
+                break;
+            }
+            edited = true;
+            events.Remove(result[argument - 1]);
+            events.EventListSaveToFile();
+            message = "";
+            break;
+        case 2:
+            message = "";
+            return 0;
+            break;
+        default:
+            break;
+        }
+        if (edited)
+            break;
     }
-
-    std::string options[] = {"re ", "ee ", "et ", "m", "q", "tt "};
-    int argument, user_input;
-    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
-
-    return 0;
+    return 1;
 }
