@@ -20,6 +20,9 @@ struct _event
     int Occur(_date &second_date, _calendar &);
     int IsEvent();
     int IsTask();
+    int IsTaskDone();
+    std::string Type();
+    std::string Status();
 };
 
 struct _event_list

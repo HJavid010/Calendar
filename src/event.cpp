@@ -88,6 +88,61 @@ int _event::IsTask()
     return 0;
 }
 
+int _event::IsTaskDone()
+{
+    if (id == 5)
+        return 1;
+    return 0;
+}
+
+std::string _event::Type()
+{
+    switch (id)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        return "Event";
+        break;
+    case 4:
+    case 5:
+        return "Task";
+        break;
+    default:
+        break;
+    }
+    return "";
+}
+
+std::string _event::Status()
+{
+    switch (id)
+    {
+    case 0:
+        return "Specific date";
+        break;
+    case 1:
+        return "Yearly";
+        break;
+    case 2:
+        return "Monthly";
+        break;
+    case 3:
+        return "Weekly";
+        break;
+    case 4:
+        return "Unfinished";
+        break;
+    case 5:
+        return "Done";
+        break;
+    default:
+        break;
+    }
+    return std::string();
+}
+
 int _event_list::Sort()
 {
     int sorted = false;

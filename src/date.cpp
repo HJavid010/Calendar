@@ -150,3 +150,17 @@ int _date::IsAfter(_date &second_date)
         return 1;
     return 0;
 }
+
+std::string _date::String(_calendar &calendar)
+{
+
+    std::string output;
+
+    output.append(std::to_string(day));
+    output += ' ';
+    output.append(calendar.month_name[month - 1]);
+    output += ' ';
+    output.append(std::to_string(year));
+
+    return output;
+}

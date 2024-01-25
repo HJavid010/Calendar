@@ -21,11 +21,11 @@
 #define FORMATTED_OUTPUT_DEFINED 1
 #ifdef FORMATTED_OUTPUT
 
-#define BOLD std::cout << "\x1b[1m";
-#define GREEN std::cout << "\x1b[32m";
-#define RED std::cout << "\x1b[31m";
-#define RESET std::cout << "\x1b[0m";
-#define BACKLINE std::cout << "\x1b[1F\x1b[2K";
+#define BOLD "\x1b[1m"
+#define GREEN "\x1b[32m"
+#define RED "\x1b[31m"
+#define RESET "\x1b[0m"
+#define BACKLINE "\x1b[1F\x1b[2K"
 #define COMMAND_STRING "\x1b[1;31m>>> \x1b[0m"
 
 #else

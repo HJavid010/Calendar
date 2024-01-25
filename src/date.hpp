@@ -14,6 +14,7 @@ struct _date
     int IsVaild(_calendar &);
     int IsEqual(_date &);
     int IsAfter(_date &);
+    std::string String(_calendar &);
 };
 
 struct _calendar

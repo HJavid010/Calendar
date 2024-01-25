@@ -55,12 +55,12 @@ int UserOptionInput(std::string prompt_text, std::string error_text, std::string
 
         if (first_error)
         {
-            BACKLINE;
+            std::cout << BACKLINE;
             first_error = false;
         }
         else
         {
-            BACKLINE BACKLINE;
+            std::cout << BACKLINE << BACKLINE;
         }
 
         std::cout << error_text << std::endl;
@@ -102,12 +102,12 @@ std::string UserStringInput(std::string prompt_text, bool multi_line, std::strin
 
             if (first_error)
             {
-                BACKLINE;
+                std::cout << BACKLINE;
                 first_error = false;
             }
             else
             {
-                BACKLINE BACKLINE;
+                std::cout << BACKLINE << BACKLINE;
             }
             std::cout << error_text << std::endl
                       << prompt_text;
@@ -144,12 +144,12 @@ _date UserDateInput(std::string prompt_text, std::string error_text, _calendar c
 
         if (first_error)
         {
-            BACKLINE;
+            std::cout << BACKLINE;
             first_error = false;
         }
         else
         {
-            BACKLINE BACKLINE;
+            std::cout << BACKLINE << BACKLINE;
         }
 
         std::cout << error_text << std::endl;
@@ -158,15 +158,13 @@ _date UserDateInput(std::string prompt_text, std::string error_text, _calendar c
 
 void Header()
 {
-    BOLD;
-    std::cout << "\t\t\tCalendar V0.4" << std::endl;
-    RESET;
+    std::cout << BOLD << "\t\t\tCalendar V0.4" << RESET << std::endl;
     Line();
 }
 void Line()
 {
-    GREEN;
+    std::cout << GREEN;
     for (int i = 0; i < WIDTH; i++)
         std::cout << "*";
-    NLINE RESET;
+    std::cout << RESET << std::endl;
 }
