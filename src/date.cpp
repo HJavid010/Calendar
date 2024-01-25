@@ -146,9 +146,15 @@ int _date::IsEqual(_date &second_date)
 
 int _date::IsAfter(_date &second_date)
 {
-    if (year > second_date.year || (year == second_date.year && month > second_date.month) || (month == second_date.month && day > second_date.day))
+
+    if (year > second_date.year)
         return 1;
-    return 0;
+    else if (year == second_date.year && month > second_date.month)
+        return 1;
+    else if (year == second_date.year && month == second_date.month && day > second_date.day)
+        return 1;
+    else
+        return 0;
 }
 
 std::string _date::String(_calendar &calendar)

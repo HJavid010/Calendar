@@ -49,6 +49,7 @@ int Event_Edit_Page(_event *);
 int Task_Edit_Page(_event *);
 int More_Options_Page();
 int Event_Search_String_Page(std::string);
+int Task_Search_String_Page(std::string);
 
 int main()
 {
@@ -115,15 +116,15 @@ int Start_Page()
               << "NT:\tNew Task" << std::endl
               << "DE n:\tDelete #n Event" << std::endl
               << "DT n:\tDetete #n Task" << std::endl
-              << "TT n:\tToggle status of #n task" << std::endl
+              << "TT n:\tToggle Status Of #n Task" << std::endl
               << "EE n:\tEdit #n Event" << std::endl
               << "ET n:\tEdit #n Task" << std::endl
               //<< "GD: Goto Date" << std::endl
-              << "M:\tMore options" << std::endl
+              << "M:\tMore Options" << std::endl
               << "Q:\tQuit" << std::endl
               << std::endl;
 
-    std::string options[] = {"n", "p", "ne", "nt", "de ", "dt ", "tt", "ee ", "et ", "m", "q"};
+    std::string options[] = {"n", "p", "ne", "nt", "de ", "dt ", "tt ", "ee ", "et ", "m", "q"};
     int argument;
     user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
     std::string search_string;
@@ -259,7 +260,7 @@ int Event_Add()
 
     new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, sizeof(options) / sizeof(std::string));
     new_event.title = UserStringInput("Title: ", false, "Title can't be empty!");
-    new_event.description = UserStringInput("Description (enter an empty line to): ");
+    new_event.description = UserStringInput("Description (enter an empty line to end text): ");
 
     events.Add(new_event, *default_calendar);
     events.EventListSaveToFile();
@@ -273,7 +274,7 @@ int Task_Add()
 
     new_task.id = 4;
     new_task.title = UserStringInput("Title: ", false, "Title can't be empty!");
-    new_task.description = UserStringInput("Description (enter an empty line to): ");
+    new_task.description = UserStringInput("Description (enter an empty line to end text): ");
 
     events.Add(new_task, *default_calendar);
     events.EventListSaveToFile();
@@ -316,14 +317,14 @@ int Event_Edit_Page(_event *event)
             break;
         }
         std::cout << event->date.String(*default_calendar) << std::endl
-                  << BOLD << "Description (enter an empty line to): " << RESET << event->description << std::endl;
+                  << BOLD << "Description: " << RESET << event->description << std::endl;
         Line();
-        std::cout << "ET:\tEdit title" << std::endl
-                  << "ED:\tEdit date" << std::endl
-                  << "EDE:\tEdit description" << std::endl
-                  << "ETY:\tEdit event type" << std::endl
+        std::cout << "ET:\tEdit Title" << std::endl
+                  << "ED:\tEdit Date" << std::endl
+                  << "EDE:\tEdit Description" << std::endl
+                  << "ETY:\tEdit Event Type" << std::endl
                   << "D:\tDelete Event" << std::endl
-                  << "B:\tGo back" << std::endl;
+                  << "B:\tGo Back" << std::endl;
 
         std::string options[] = {"et", "ed", "ede", "ety", "d", "b"};
         int user_input;
@@ -372,14 +373,14 @@ int Task_Edit_Page(_event *event)
         std::cout << BOLD << "Title: " << RESET << event->title << std::endl
                   << BOLD << "Date: " << RESET << event->date.String(*default_calendar) << std::endl
                   << BOLD << "Status: " << RESET << event->Status() << std::endl
-                  << BOLD << "Description (enter an empty line to): " << RESET << event->description << std::endl;
+                  << BOLD << "Description (enter an empty line to end text): " << RESET << event->description << std::endl;
         Line();
-        std::cout << "ET:\tEdit title" << std::endl
-                  << "ED:\tEdit date" << std::endl
-                  << "EDE:\tEdit description" << std::endl
-                  << "T:\tToggle status" << std::endl
-                  << "D:\tDelete task" << std::endl
-                  << "B:\tGo back" << std::endl;
+        std::cout << "ET:\tEdit Title" << std::endl
+                  << "ED:\tEdit Date" << std::endl
+                  << "EDE:\tEdit Description" << std::endl
+                  << "T:\tToggle Status" << std::endl
+                  << "D:\tDelete Task" << std::endl
+                  << "B:\tGo Back" << std::endl;
 
         std::string options[] = {"et", "ed", "ede", "t", "d", "b"};
         int user_input;
@@ -434,12 +435,12 @@ int More_Options_Page()
 
     std::cout << message << std::endl
               << "GD:\tGoto Date" << std::endl
-              << "UE:\tUpcoming events" << std::endl
-              << "UT:\tUpcoming tasks" << std::endl
-              << "LT:\tShow late tasks" << std::endl
-              << "SE:\tSearch in events" << std::endl
-              << "ST:\tSearch in tasks" << std::endl
-              << "B:\tBack to homepage" << std::endl
+              << "UE:\tUpcoming Events" << std::endl
+              << "UT:\tUpcoming Tasks" << std::endl
+              << "LT:\tShow Late Tasks" << std::endl
+              << "SE:\tSearch In Events" << std::endl
+              << "ST:\tSearch In Tasks" << std::endl
+              << "B:\tBack To Homepage" << std::endl
               << std::endl;
 
     std::string options[] = {"gd", "ue", "ut", "lt", "se", "st", "b"};
@@ -458,6 +459,12 @@ int More_Options_Page()
         {
         }
         break;
+    case 5:
+        search_string = UserStringInput("string to search:", false, "error!");
+        while (Task_Search_String_Page(search_string))
+        {
+        }
+        break;
     case 6:
         return 0;
         break;
@@ -473,15 +480,8 @@ int Event_Search_String_Page(std::string search_string)
 {
     std::string message;
     int edited = false;
-    int result[events.real_size], result_size = 0;
-    for (int i = 0; i < events.size; i++)
-    {
-        if (IsInString(events.event_ptr[i]->title, search_string))
-        {
-            result[result_size] = i;
-            result_size++;
-        }
-    }
+    int result[events.real_size], result_size;
+    result_size = events.EventSearchByString(search_string, result);
     while (true)
     {
         CLEAR;
@@ -496,14 +496,120 @@ int Event_Search_String_Page(std::string search_string)
 
         for (int i = 0; i < result_size; i++)
         {
-            std::cout << i + 1 << "- " << events.event_ptr[result[i]]->title << std::endl;
+            _event *event = events.event_ptr[result[i]];
+            std::cout << i + 1 << "- " << event->title << ", " << BOLD << event->Status() << ", ";
+            switch (event->id)
+            {
+            case 0:
+                std::cout << RESET << "On " << BOLD;
+                break;
+            case 1:
+                std::cout << "Every " << event->date.day << " " << default_calendar->month_name[event->date.month] << RESET << " from ";
+                break;
+            case 2:
+                std::cout << "Every " << event->date.day << RESET << " from ";
+                break;
+            case 3:
+                std::cout << "Every " << default_calendar->weekday_name[Weekday(DateToDay(event->date, *default_calendar), *default_calendar)] << RESET << " from ";
+                break;
+            default:
+                break;
+            };
+            std::cout << event->date.String(*default_calendar) << RESET << std::endl;
         }
         Line();
 
         std::cout << message << std::endl
-                  << "E n:\tEdit #n event" << std::endl
-                  << "D n:\tDelete #n event" << std::endl
-                  << "B:\tBack to homepage" << std::endl
+                  << "E n:\tEdit #n Event" << std::endl
+                  << "D n:\tDelete #n Event" << std::endl
+                  << "B:\tBack to HomePage" << std::endl
+                  << std::endl;
+
+        std::string options[] = {"e ", "d ", "b"};
+        int argument, user_input;
+        user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
+        switch (user_input)
+        {
+        case 0:
+            if (argument > result_size)
+            {
+                message = "Out of range!";
+                break;
+            }
+            switch (Event_Edit_Page(events.event_ptr[result[argument - 1]]))
+            {
+            case 0:
+                break;
+            case 1:
+                edited = true;
+                events.Sort();
+                events.EventListSaveToFile();
+                message = "";
+                break;
+            case 2:
+                edited = true;
+                events.Remove(result[argument - 1]);
+                events.EventListSaveToFile();
+                message = "";
+                break;
+            default:
+                message = "UNKNOWN ERROR!";
+                break;
+            }
+            break;
+        case 1:
+            if (argument > result_size)
+            {
+                message = "Out of range!";
+                break;
+            }
+            edited = true;
+            events.Remove(result[argument - 1]);
+            events.EventListSaveToFile();
+            message = "";
+            break;
+        case 2:
+            message = "";
+            return 0;
+            break;
+        default:
+            break;
+        }
+        if (edited)
+            break;
+    }
+    return 1;
+}
+
+int Task_Search_String_Page(std::string search_string)
+{
+    std::string message;
+    int edited = false;
+    int result[events.real_size], result_size;
+    result_size = events.TaskSearchByString(search_string, result);
+    while (true)
+    {
+        CLEAR;
+        Header();
+        if (result_size == 0)
+        {
+            std::cout << "No Result!" << std::endl
+                      << "Press enter to continue" << std::endl;
+            getline(std::cin, message);
+            return 0;
+        }
+
+        for (int i = 0; i < result_size; i++)
+        {
+            _event *event = events.event_ptr[result[i]];
+            std::cout << i + 1 << "- " << event->title << ", " << BOLD << event->Status() << ", " << event->date.String(*default_calendar) << RESET << std::endl;
+        }
+        Line();
+
+        std::cout << message << std::endl
+                  << "E n:\tEdit #n Task" << std::endl
+                  << "D n:\tDelete #n Task" << std::endl
+                  << "B:\tBack to HomePage" << std::endl
                   << std::endl;
 
         std::string options[] = {"e ", "d ", "b"};

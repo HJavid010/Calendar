@@ -140,7 +140,7 @@ std::string _event::Status()
     default:
         break;
     }
-    return std::string();
+    return "";
 }
 
 int _event_list::Sort()
@@ -208,36 +208,70 @@ int _event_list::Remove(int index)
     return 0;
 }
 
-int _event_list::SearchByString(std::string search_string, int search_array[])
+int _event_list::EventSearchByString(std::string search_string, int search_array[])
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
-        if (IsInString(event_ptr[i]->title, search_string) || IsInString(event_ptr[i]->description, search_string))
+        if (event_ptr[i]->IsEvent())
         {
-            search_array[search_array_size] = i;
-            search_array_size++;
+            if (IsInString(event_ptr[i]->title, search_string) || IsInString(event_ptr[i]->description, search_string))
+            {
+                search_array[search_array_size] = i;
+                search_array_size++;
+            }
         }
     }
     int sorted = false;
     while (!sorted)
     {
         sorted = true;
-        for (int i = 0; i < size - 1; i++)
+        for (int i = 0; i < search_array_size - 1; i++)
         {
-            if (event_ptr[i]->title.compare(event_ptr[i + 1]->title) > 0)
+            if (event_ptr[search_array[i]]->title.compare(event_ptr[search_array[i + 1]]->title) > 0)
             {
                 sorted = false;
-                _event *tmp_event_ptr;
-                tmp_event_ptr = event_ptr[i];
-                event_ptr[i] = event_ptr[i + 1];
-                event_ptr[i + 1] = tmp_event_ptr;
+                int tmp;
+                tmp = search_array[i];
+                search_array[i] = search_array[i + 1];
+                search_array[i + 1] = tmp;
             }
         }
     }
     return search_array_size;
 }
-
+int _event_list::TaskSearchByString(std::string search_string, int search_array[])
+{
+    int search_array_size = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (event_ptr[i]->IsTask())
+        {
+            if (IsInString(event_ptr[i]->title, search_string) || IsInString(event_ptr[i]->description, search_string))
+            {
+                search_array[search_array_size] = i;
+                search_array_size++;
+            }
+        }
+    }
+    int sorted = false;
+    while (!sorted)
+    {
+        sorted = true;
+        for (int i = 0; i < search_array_size  - 1; i++)
+        {
+            if (event_ptr[search_array[i]]->title.compare(event_ptr[search_array[i + 1]]->title) > 0)
+            {
+                sorted = false;
+                int tmp;
+                tmp = search_array[i];
+                search_array[i] = search_array[i + 1];
+                search_array[i + 1] = tmp;
+            }
+        }
+    }
+    return search_array_size;
+}
 int _event_list::EventsOccurOnDate(_date date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;

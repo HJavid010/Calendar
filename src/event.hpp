@@ -35,7 +35,8 @@ struct _event_list
     int Sort();
     int Add(_event &, _calendar &);
     int Remove(int);
-    int SearchByString(std::string, int[]);
+    int EventSearchByString(std::string, int[]);
+    int TaskSearchByString(std::string, int[]);
     int EventsOccurOnDate(_date, int[], _calendar &);
     int TasksOccurOnDate(_date, int[], _calendar &);
     int OccurAfter(_date, int[]);
