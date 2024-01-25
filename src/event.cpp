@@ -258,7 +258,7 @@ int _event_list::TaskSearchByString(std::string search_string, int search_array[
     while (!sorted)
     {
         sorted = true;
-        for (int i = 0; i < search_array_size  - 1; i++)
+        for (int i = 0; i < search_array_size - 1; i++)
         {
             if (event_ptr[search_array[i]]->title.compare(event_ptr[search_array[i + 1]]->title) > 0)
             {
@@ -300,15 +300,19 @@ int _event_list::TasksOccurOnDate(_date date, int search_array[], _calendar &cal
     return search_array_size;
 }
 
-int _event_list::OccurAfter(_date date, int search_array[])
+int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
     {
-        if (event_ptr[i]->date.IsEqual(date) || event_ptr[i]->date.IsAfter(date))
+        if (event_ptr[i]->IsEvent())
         {
-            search_array[search_array_size] = i;
-            search_array_size++;
+            _date first_occur_date;
+            if (event_ptr[i]->date.IsEqual(date) || event_ptr[i]->date.IsAfter(date))
+            {
+                search_array[search_array_size] = i;
+                search_array_size++;
+            }
         }
     }
     return search_array_size;

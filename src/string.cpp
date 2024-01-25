@@ -65,7 +65,7 @@ int LineToStringList(std::string text, std::string out_text[], int out_size)
             else
                 i++;
         }
-        while (text[i] == ' ' || text[i] == '\t')
+        while (isblank(text[i]))
         {
             i++;
         }
@@ -121,7 +121,7 @@ int LineToStringList(std::string text, std::string out_text[], int out_size)
             }
             array_size++;
         }
-        while (text[i] == ' ' || text[i] == '\t')
+        while (isblank(text[i]))
         {
             i++;
         }

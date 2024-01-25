@@ -72,7 +72,7 @@ _date DayToDate(int ddate, _calendar &calendar)
         out_date.year++;
         days = calendar.year_size + calendar.IsLeapYear(out_date.year);
     };
-    days = calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year));
+    days = out_date.month_size(calendar);
 
     while (ddate > days)
     {
@@ -83,12 +83,12 @@ _date DayToDate(int ddate, _calendar &calendar)
             out_date.year++;
             out_date.month = 1;
         }
-        days = calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year));
+        days = out_date.month_size(calendar);
     }
     out_date.day += ddate;
-    if (out_date.day > calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year)))
+    if (out_date.day > out_date.month_size(calendar))
     {
-        out_date.day -= calendar.month_size[out_date.month - 1] + (out_date.month == calendar.leap_month && calendar.IsLeapYear(out_date.year));
+        out_date.day -= out_date.month_size(calendar);
         out_date.month++;
     }
     if (out_date.month == 13)
@@ -132,7 +132,7 @@ int SystemDDate()
 
 int _date::IsVaild(_calendar &calendar)
 {
-    if (calendar.origin.year - year > 69 || month > 12 || month < 1 || day > calendar.month_size[month] + (calendar.IsLeapYear(year)) || day < 1)
+    if (calendar.origin.year - year > 69 || month > 12 || month < 1 || day > month_size(calendar) || day < 1)
         return 0;
     return 1;
 }
@@ -155,6 +155,11 @@ int _date::IsAfter(_date &second_date)
         return 1;
     else
         return 0;
+}
+
+int _date::month_size(_calendar &calendar)
+{
+    return calendar.month_size[month - 1] + (calendar.IsLeapYear(year) && calendar.leap_month == month);
 }
 
 std::string _date::String(_calendar &calendar)

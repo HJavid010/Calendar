@@ -14,6 +14,7 @@ struct _date
     int IsVaild(_calendar &);
     int IsEqual(_date &);
     int IsAfter(_date &);
+    int month_size(_calendar &);
     std::string String(_calendar &);
 };
 
@@ -31,6 +32,7 @@ struct _calendar
     int weekday_begin;
 };
 int Weekday(int, _calendar &);
+int MonthSize(int, _calendar &);
 _date DayToDate(int ddate, _calendar &);
 int DateToDay(_date, _calendar &);
 int SystemDDate();
