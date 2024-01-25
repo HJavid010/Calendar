@@ -30,11 +30,11 @@
 
 #else
 
-#define BOLD
-#define GREEN
-#define RED
-#define RESET
-#define BACKLINE
+#define BOLD ""
+#define GREEN ""
+#define RED ""
+#define RESET ""
+#define BACKLINE ""
 #define COMMAND_STRING ">>> "
 
 #endif /* FORMATTED_OUTPUT */
