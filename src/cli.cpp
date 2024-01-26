@@ -92,13 +92,16 @@ std::string UserStringInput(std::string prompt_text, bool multi_line, std::strin
     {
         bool first_error = false;
         unsigned long int lenght = user_input.length();
-        for (int i = lenght - 1; i >= 0; i--)
+        while (true)
         {
-            if (isblank(user_input[i]))
-                lenght--;
-        }
-        while (lenght == 0)
-        {
+            lenght = user_input.length();
+            for (int i = lenght - 1; i >= 0; i--)
+            {
+                if (isblank(user_input[i]))
+                    lenght--;
+            }
+            if (lenght)
+                return user_input;
 
             if (first_error)
             {
@@ -113,7 +116,6 @@ std::string UserStringInput(std::string prompt_text, bool multi_line, std::strin
                       << prompt_text;
             getline(std::cin, user_input);
         }
-        return user_input;
     }
 }
 
