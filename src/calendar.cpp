@@ -40,7 +40,7 @@ struct _day
     void RegenerateDates();
 } selected_day, today;
 
-_date *default_selected_date = &selected_day.shamsi, *default_toda_date = &today.shamsi;
+_date *default_selected_date = &selected_day.shamsi, *default_today_date = &today.shamsi;
 
 int Start_Page();
 int Event_Add();
@@ -48,8 +48,8 @@ int Task_Add();
 int Event_Edit_Page(_event *);
 int Task_Edit_Page(_event *);
 int More_Options_Page();
-int Event_Search_String_Page(std::string);
-int Task_Search_String_Page(std::string);
+int Event_Search_String_Page(std::string, int[], int);
+int Task_Search_String_Page(std::string, int[], int);
 
 int main()
 {
@@ -432,7 +432,8 @@ int More_Options_Page()
     std::cout << calendars.gregorian.name << ": " << selected_day.gregorian.year << "-" << selected_day.gregorian.month << "-" << selected_day.gregorian.day << "\t" << calendars.gregorian.weekday_name[Weekday(selected_day.ddate, calendars.gregorian)] << std::endl;
 
     Line();
-
+    std::cout << "More Options" << std::endl;
+    Line();
     std::cout << message << std::endl
               << "GD:\tGoto Date" << std::endl
               << "UE:\tUpcoming Events" << std::endl
@@ -445,7 +446,8 @@ int More_Options_Page()
 
     std::string options[] = {"gd", "ue", "ut", "lt", "se", "st", "b"};
     user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string));
-    std::string search_string;
+    std::string search_string, search_message;
+    int result[events.real_size], result_size;
     switch (user_input)
     {
     case 0:
@@ -453,16 +455,34 @@ int More_Options_Page()
         selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
         selected_day.RegenerateDates();
         break;
+    case 3:
+        search_message = "Late Undone Tasks";
+        result_size = events.TasksLate(*default_today_date, result, *default_calendar);
+        while (Task_Search_String_Page(search_message, result, result_size))
+        {
+            result_size = events.TasksLate(*default_today_date, result, *default_calendar);
+        }
+        break;
     case 4:
         search_string = UserStringInput("string to search:", false, "error!");
-        while (Event_Search_String_Page(search_string))
+        search_message = "Searching \"";
+        search_message.append(search_string);
+        search_message.append("\" in events");
+        result_size = events.EventSearchByString(search_string, result);
+        while (Event_Search_String_Page(search_message, result, result_size))
         {
+            result_size = events.EventSearchByString(search_string, result);
         }
         break;
     case 5:
         search_string = UserStringInput("string to search:", false, "error!");
-        while (Task_Search_String_Page(search_string))
+        search_message = "Searching \"";
+        search_message.append(search_string);
+        search_message.append("\" in tasks");
+        result_size = events.TaskSearchByString(search_string, result);
+        while (Task_Search_String_Page(search_message, result, result_size))
         {
+            result_size = events.TaskSearchByString(search_string, result);
         }
         break;
     case 6:
@@ -476,16 +496,16 @@ int More_Options_Page()
     return 1;
 }
 
-int Event_Search_String_Page(std::string search_string)
+int Event_Search_String_Page(std::string search_messsage, int result[], int result_size)
 {
     std::string message;
     int edited = false;
-    int result[events.real_size], result_size;
-    result_size = events.EventSearchByString(search_string, result);
     while (true)
     {
         CLEAR;
         Header();
+        std::cout << search_messsage << std::endl;
+        Line();
         if (result_size == 0)
         {
             std::cout << "No Result!" << std::endl
@@ -581,16 +601,16 @@ int Event_Search_String_Page(std::string search_string)
     return 1;
 }
 
-int Task_Search_String_Page(std::string search_string)
+int Task_Search_String_Page(std::string search_messsage, int result[], int result_size)
 {
     std::string message;
     int edited = false;
-    int result[events.real_size], result_size;
-    result_size = events.TaskSearchByString(search_string, result);
     while (true)
     {
         CLEAR;
         Header();
+        std::cout << search_messsage << std::endl;
+        Line();
         if (result_size == 0)
         {
             std::cout << "No Result!" << std::endl
@@ -609,10 +629,11 @@ int Task_Search_String_Page(std::string search_string)
         std::cout << message << std::endl
                   << "E n:\tEdit #n Task" << std::endl
                   << "D n:\tDelete #n Task" << std::endl
+                  << "T n:\tToggle #n Task Status" << std::endl
                   << "B:\tBack to HomePage" << std::endl
                   << std::endl;
 
-        std::string options[] = {"e ", "d ", "b"};
+        std::string options[] = {"e ", "d ", "t ", "b"};
         int argument, user_input;
         user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
         switch (user_input)
@@ -623,7 +644,7 @@ int Task_Search_String_Page(std::string search_string)
                 message = "Out of range!";
                 break;
             }
-            switch (Event_Edit_Page(events.event_ptr[result[argument - 1]]))
+            switch (Task_Edit_Page(events.event_ptr[result[argument - 1]]))
             {
             case 0:
                 break;
@@ -656,6 +677,16 @@ int Task_Search_String_Page(std::string search_string)
             message = "";
             break;
         case 2:
+            if (argument < 1 || argument > result_size)
+            {
+                message = "Out of range!";
+                break;
+            }
+            events.event_ptr[result[argument - 1]]->ToggleDone();
+            events.EventListSaveToFile();
+            message = "";
+            break;
+        case 3:
             message = "";
             return 0;
             break;

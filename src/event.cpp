@@ -318,6 +318,31 @@ int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &cal
     return search_array_size;
 }
 
+int _event_list::TasksLate(_date date, int search_array[], _calendar &calendar)
+{
+    int search_array_size = 0;
+    bool done = false;
+    for (int i = 0; i < size; i++)
+    {
+        if (event_ptr[i]->id == 4)
+        {
+            if (date.IsAfter(event_ptr[i]->date))
+            {
+                search_array[search_array_size] = i;
+                search_array_size++;
+            }
+            else
+            {
+                done = true;
+                break;
+            }
+        }
+        if (done)
+            break;
+    }
+    return search_array_size;
+}
+
 int _event_list::EventListSaveToFile(std::string filename)
 {
     std::ofstream file(filename, std::ios::out);

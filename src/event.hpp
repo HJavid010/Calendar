@@ -40,6 +40,8 @@ struct _event_list
     int EventsOccurOnDate(_date, int[], _calendar &);
     int TasksOccurOnDate(_date, int[], _calendar &);
     int EventsOccurAfter(_date, int[], _calendar &);
+    int TasksLate(_date, int[], _calendar &);
+    int TasksOccurAfter(_date, int[], _calendar &);
     int EventListSaveToFile(std::string filename = EVENT_FILE);
     int EventListLoadFromFile(_calendar &, std::string filename = EVENT_FILE);
 };
