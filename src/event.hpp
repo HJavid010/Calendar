@@ -11,16 +11,25 @@
 
 struct _event
 {
+    // id is used to seperate diffrent events and tasks
+    // EVENTS
+    // 0: specific date, 1: yearly, 2: monthly, 3: weekly
+    // TASKS
+    // 4: undone, 5: done
     int id = 0;
-    std::string title;
-    std::string description;
-    _date date;
-    int ToggleDone();
-    int IsVaild(_calendar &);
+
+    std::string title; // title can't be empty and should only be one line
+    std::string description; // title can be empty and multiline
+    _date date; // start date of repeating events or specific date for type 0 or tasks
+    int ToggleDone(); // used to toggle status for tasks
+    int IsVaild(_calendar &); // verify that can an event be added to the list or not
+
+     // takes a date as argument and returns 1 if the event or tasks happens in the date 
     int Occur(_date &second_date, _calendar &);
     int IsEvent();
     int IsTask();
     int IsTaskDone();
+    _date FirstRecurrenceAfter(_date, _calendar &);
     std::string Type();
     std::string Status();
 };

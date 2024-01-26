@@ -2,8 +2,10 @@
 
 int _calendar::IsLeapYear(int year)
 {
+    // leap years rules are defined here
     switch (id)
     {
+    // case 0 is shamsi calendar
     case 0:
         switch (year % 33)
         {
@@ -21,10 +23,12 @@ int _calendar::IsLeapYear(int year)
             break;
         }
         break;
+    // case 1 is gregorian calendar
     case 1:
         if ((year % 100 != 0 || year % 400 == 0) && year % 4 == 0)
             return 1;
         break;
+    // case 2 is ghamari calendar
     case 2:
         switch (year % 30)
         {
@@ -54,7 +58,7 @@ int _calendar::IsLeapYear(int year)
 
 int Weekday(int ddate, _calendar &calendar)
 {
-    return (ddate % 7 + 7 + calendar.weekday_begin) % 7;
+    return (ddate % 7 + calendar.weekday_begin) % 7;
 }
 
 _date DayToDate(int ddate, _calendar &calendar)
@@ -72,7 +76,7 @@ _date DayToDate(int ddate, _calendar &calendar)
         out_date.year++;
         days = calendar.year_size + calendar.IsLeapYear(out_date.year);
     };
-    days = out_date.month_size(calendar);
+    days = out_date.MonthSize(calendar);
 
     while (ddate > days)
     {
@@ -83,12 +87,12 @@ _date DayToDate(int ddate, _calendar &calendar)
             out_date.year++;
             out_date.month = 1;
         }
-        days = out_date.month_size(calendar);
+        days = out_date.MonthSize(calendar);
     }
     out_date.day += ddate;
-    if (out_date.day > out_date.month_size(calendar))
+    if (out_date.day > out_date.MonthSize(calendar))
     {
-        out_date.day -= out_date.month_size(calendar);
+        out_date.day -= out_date.MonthSize(calendar);
         out_date.month++;
     }
     if (out_date.month == 13)
@@ -98,6 +102,7 @@ _date DayToDate(int ddate, _calendar &calendar)
     }
     return out_date;
 }
+
 int DateToDay(_date date, _calendar &calendar)
 {
     int ddate = 0;
@@ -132,7 +137,7 @@ int SystemDDate()
 
 int _date::IsVaild(_calendar &calendar)
 {
-    if (calendar.origin.year - year > 69 || month > 12 || month < 1 || day > month_size(calendar) || day < 1)
+    if (calendar.origin.year - year > 69 || month > 12 || month < 1 || day > MonthSize(calendar) || day < 1)
         return 0;
     return 1;
 }
@@ -157,7 +162,7 @@ int _date::IsAfter(_date &second_date)
         return 0;
 }
 
-int _date::month_size(_calendar &calendar)
+int _date::MonthSize(_calendar &calendar)
 {
     return calendar.month_size[month - 1] + (calendar.IsLeapYear(year) && calendar.leap_month == month);
 }

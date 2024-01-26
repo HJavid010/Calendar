@@ -66,9 +66,6 @@ int _event::IsEvent()
     case 3:
         return 1;
         break;
-
-    default:
-        break;
     }
     return 0;
 }
@@ -81,9 +78,6 @@ int _event::IsTask()
     case 5:
         return 1;
         break;
-
-    default:
-        break;
     }
     return 0;
 }
@@ -93,6 +87,48 @@ int _event::IsTaskDone()
     if (id == 5)
         return 1;
     return 0;
+}
+
+_date _event::FirstRecurrenceAfter(_date second_date, _calendar &calendar)
+{
+    _date new_date = calendar.origin;
+    int ddate, second_ddate, new_ddate;
+
+    switch (id)
+    {
+    case 1:
+        new_date.day = date.day;
+        new_date.month = date.month;
+        new_date.year = second_date.year;
+        if (new_date.IsAfter(second_date))
+            break;
+        while (!new_date.IsVaild(calendar))
+            new_date.year++;
+        break;
+    case 2:
+        new_date.day = date.day;
+        new_date.month = second_date.month;
+        new_date.year = second_date.year;
+        if (new_date.IsAfter(second_date))
+            break;
+        while (!new_date.IsVaild(calendar))
+        {
+            new_date.month++;
+            if (new_date.month > 12)
+            {
+                new_date.month = 1;
+                new_date.year++;
+            }
+        }
+        break;
+    case 3:
+        ddate = DateToDay(date, calendar);
+        second_ddate = DateToDay(second_date, calendar);
+        new_ddate = ddate + 7 - (Weekday(ddate, calendar) - Weekday(second_ddate, calendar));
+        new_date = DayToDate(new_ddate, calendar);
+        break;
+    }
+    return new_date;
 }
 
 std::string _event::Type()
@@ -108,8 +144,6 @@ std::string _event::Type()
     case 4:
     case 5:
         return "Task";
-        break;
-    default:
         break;
     }
     return "";
@@ -136,8 +170,6 @@ std::string _event::Status()
         break;
     case 5:
         return "Done";
-        break;
-    default:
         break;
     }
     return "";
@@ -300,7 +332,7 @@ int _event_list::TasksOccurOnDate(_date date, int search_array[], _calendar &cal
     return search_array_size;
 }
 
-int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &calendar)
+/*int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
     for (int i = 0; i < size; i++)
@@ -308,15 +340,19 @@ int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &cal
         if (event_ptr[i]->IsEvent())
         {
             _date first_occur_date;
-            if (event_ptr[i]->date.IsEqual(date) || event_ptr[i]->date.IsAfter(date))
+            if (date.IsAfter(event_ptr[i]->date))
             {
-                search_array[search_array_size] = i;
-                search_array_size++;
+                if (event_ptr[i]->id != 0)
+                {
+                    search_array[search_array_size] = i;
+                    search_array_size++;
+                }
             }
+            else()
         }
     }
     return search_array_size;
-}
+}*/
 
 int _event_list::TasksLate(_date date, int search_array[], _calendar &calendar)
 {
