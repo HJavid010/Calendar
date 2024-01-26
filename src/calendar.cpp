@@ -42,14 +42,14 @@ struct _day
 
 _date *default_selected_date = &selected_day.shamsi, *default_today_date = &today.shamsi;
 
-int Start_Page();
-int Event_Add();
-int Task_Add();
+int Home_Page();
+int Event_Add_Page();
+int Task_Add_Page();
 int Event_Edit_Page(_event *);
 int Task_Edit_Page(_event *);
 int More_Options_Page();
-int Event_Search_String_Page(std::string, int[], int);
-int Task_Search_String_Page(std::string, int[], int);
+int Event_Search_Show_Page(std::string, int[], int);
+int Task_Search_Show_Page(std::string, int[], int);
 
 int main()
 {
@@ -57,13 +57,13 @@ int main()
     today.ddate = SystemDDate();
     today.RegenerateDates();
     selected_day = today;
-    while (Start_Page())
+    while (Home_Page())
     {
     }
     return 0;
 }
 
-int Start_Page()
+int Home_Page()
 {
     static std::string message;
     int user_input;
@@ -147,11 +147,11 @@ int Start_Page()
         break;
 
     case 2:
-        Event_Add();
+        Event_Add_Page();
         message = "";
         break;
     case 3:
-        Task_Add();
+        Task_Add_Page();
         message = "";
         break;
     case 4:
@@ -252,7 +252,7 @@ int Start_Page()
     return 1;
 }
 
-int Event_Add()
+int Event_Add_Page()
 {
     _event new_event;
     new_event.date = *default_selected_date;
@@ -267,7 +267,7 @@ int Event_Add()
     return 0;
 }
 
-int Task_Add()
+int Task_Add_Page()
 {
     _event new_task;
     new_task.date = *default_selected_date;
@@ -455,10 +455,26 @@ int More_Options_Page()
         selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
         selected_day.RegenerateDates();
         break;
+    case 1:
+        search_message = "Upcoming Events";
+        result_size = events.EventsOccurAfter(*default_today_date, result, *default_calendar);
+        while (Event_Search_Show_Page(search_message, result, result_size))
+        {
+            result_size = events.EventsOccurAfter(*default_today_date, result, *default_calendar);
+        }
+        break;
+    case 2:
+        search_message = "Upcoming Tasks";
+        result_size = events.TasksOccurAfter(*default_today_date, result, *default_calendar);
+        while (Task_Search_Show_Page(search_message, result, result_size))
+        {
+            result_size = events.TasksOccurAfter(*default_today_date, result, *default_calendar);
+        }
+        break;
     case 3:
         search_message = "Late Undone Tasks";
         result_size = events.TasksLate(*default_today_date, result, *default_calendar);
-        while (Task_Search_String_Page(search_message, result, result_size))
+        while (Task_Search_Show_Page(search_message, result, result_size))
         {
             result_size = events.TasksLate(*default_today_date, result, *default_calendar);
         }
@@ -469,7 +485,7 @@ int More_Options_Page()
         search_message.append(search_string);
         search_message.append("\" in events");
         result_size = events.EventSearchByString(search_string, result);
-        while (Event_Search_String_Page(search_message, result, result_size))
+        while (Event_Search_Show_Page(search_message, result, result_size))
         {
             result_size = events.EventSearchByString(search_string, result);
         }
@@ -480,7 +496,7 @@ int More_Options_Page()
         search_message.append(search_string);
         search_message.append("\" in tasks");
         result_size = events.TaskSearchByString(search_string, result);
-        while (Task_Search_String_Page(search_message, result, result_size))
+        while (Task_Search_Show_Page(search_message, result, result_size))
         {
             result_size = events.TaskSearchByString(search_string, result);
         }
@@ -496,7 +512,7 @@ int More_Options_Page()
     return 1;
 }
 
-int Event_Search_String_Page(std::string search_messsage, int result[], int result_size)
+int Event_Search_Show_Page(std::string search_messsage, int result[], int result_size)
 {
     std::string message;
     int edited = false;
@@ -601,7 +617,7 @@ int Event_Search_String_Page(std::string search_messsage, int result[], int resu
     return 1;
 }
 
-int Task_Search_String_Page(std::string search_messsage, int result[], int result_size)
+int Task_Search_Show_Page(std::string search_messsage, int result[], int result_size)
 {
     std::string message;
     int edited = false;

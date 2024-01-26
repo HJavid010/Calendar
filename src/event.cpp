@@ -89,28 +89,30 @@ int _event::IsTaskDone()
     return 0;
 }
 
-_date _event::FirstRecurrenceAfter(_date second_date, _calendar &calendar)
+_date _event::FirstRecurrenceAfter(_date target_date, _calendar &calendar)
 {
     _date new_date = calendar.origin;
-    int ddate, second_ddate, new_ddate;
+    int ddate, target_ddate, new_ddate;
 
     switch (id)
     {
     case 1:
         new_date.day = date.day;
         new_date.month = date.month;
-        new_date.year = second_date.year;
-        if (new_date.IsAfter(second_date))
+        new_date.year = target_date.year;
+        if (new_date.IsAfter(target_date))
             break;
+        new_date.year++;
         while (!new_date.IsVaild(calendar))
             new_date.year++;
         break;
     case 2:
         new_date.day = date.day;
-        new_date.month = second_date.month;
-        new_date.year = second_date.year;
-        if (new_date.IsAfter(second_date))
+        new_date.month = target_date.month;
+        new_date.year = target_date.year;
+        if (new_date.IsAfter(target_date))
             break;
+        new_date.month++;
         while (!new_date.IsVaild(calendar))
         {
             new_date.month++;
@@ -123,8 +125,8 @@ _date _event::FirstRecurrenceAfter(_date second_date, _calendar &calendar)
         break;
     case 3:
         ddate = DateToDay(date, calendar);
-        second_ddate = DateToDay(second_date, calendar);
-        new_ddate = ddate + 7 - (Weekday(ddate, calendar) - Weekday(second_ddate, calendar));
+        target_ddate = DateToDay(target_date, calendar);
+        new_ddate = target_ddate + (ddate % 7 - target_ddate % 7 + 7) % 7;
         new_date = DayToDate(new_ddate, calendar);
         break;
     }
@@ -332,27 +334,53 @@ int _event_list::TasksOccurOnDate(_date date, int search_array[], _calendar &cal
     return search_array_size;
 }
 
-/*int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &calendar)
+int _event_list::EventsOccurAfter(_date date, int search_array[], _calendar &calendar)
 {
     int search_array_size = 0;
+    _date search_array_dates[size];
     for (int i = 0; i < size; i++)
     {
         if (event_ptr[i]->IsEvent())
         {
-            _date first_occur_date;
             if (date.IsAfter(event_ptr[i]->date))
             {
                 if (event_ptr[i]->id != 0)
                 {
+                    search_array_dates[search_array_size] = event_ptr[i]->FirstRecurrenceAfter(date, calendar);
                     search_array[search_array_size] = i;
                     search_array_size++;
                 }
             }
-            else()
+            else if (event_ptr[i]->date.IsAfter(date))
+            {
+                search_array_dates[search_array_size] = event_ptr[i]->date;
+                search_array[search_array_size] = i;
+                search_array_size++;
+            }
+        }
+    }
+    int sorted = false;
+    while (!sorted)
+    {
+        sorted = true;
+        for (int i = 0; i < search_array_size - 1; i++)
+        {
+            if (search_array_dates[i].IsAfter(search_array_dates[i + 1]))
+            {
+                sorted = false;
+                _date tmp_date;
+                tmp_date = search_array_dates[i];
+                search_array_dates[i] = search_array_dates[i + 1];
+                search_array_dates[i + 1] = tmp_date;
+                int tmp;
+                tmp = search_array[i];
+                search_array[i] = search_array[i + 1];
+                search_array[i + 1] = tmp;
+            }
         }
     }
     return search_array_size;
-}*/
+}
 
 int _event_list::TasksLate(_date date, int search_array[], _calendar &calendar)
 {
@@ -375,6 +403,26 @@ int _event_list::TasksLate(_date date, int search_array[], _calendar &calendar)
         }
         if (done)
             break;
+    }
+    return search_array_size;
+}
+
+int _event_list::TasksOccurAfter(_date date, int search_array[], _calendar &calendar)
+{
+    int search_array_size = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (event_ptr[i]->IsTask())
+        {
+            if (event_ptr[i]->date.IsAfter(date))
+            {
+                if (event_ptr[i]->date.IsAfter(date))
+                {
+                    search_array[search_array_size] = i;
+                    search_array_size++;
+                }
+            }
+        }
     }
     return search_array_size;
 }
