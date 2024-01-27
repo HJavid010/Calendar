@@ -14,9 +14,9 @@
 #define CLEAR system("clear");
 #endif // defined _WIN32
 
-#define VERSION "v3.1.4"
+#define VERSION "v3.9.4"
 #define NLINE std::cout << std::endl;
-#define WIDTH 62
+#define WIDTH 63
 
 #ifndef FORMATTED_OUTPUT_DEFINED
 #define FORMATTED_OUTPUT_DEFINED 1

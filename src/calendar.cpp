@@ -119,7 +119,6 @@ int Home_Page()
               << "TT n:\tToggle Status Of #n Task" << std::endl
               << "EE n:\tEdit #n Event" << std::endl
               << "ET n:\tEdit #n Task" << std::endl
-              //<< "GD: Goto Date" << std::endl
               << "M:\tMore Options" << std::endl
               << "Q:\tQuit" << std::endl
               << std::endl;
@@ -435,7 +434,8 @@ int More_Options_Page()
     std::cout << "More Options" << std::endl;
     Line();
     std::cout << message << std::endl
-              << "GD:\tGoto Date" << std::endl
+              << "GSD:\tGoto Shamsi Date" << std::endl
+              << "GGD:\tGoto Gregorian Date" << std::endl
               << "GT:\tGoto Today" << std::endl
               << "UE:\tUpcoming Events" << std::endl
               << "UT:\tUpcoming Tasks" << std::endl
@@ -445,7 +445,7 @@ int More_Options_Page()
               << "B:\tBack To Homepage" << std::endl
               << std::endl;
 
-    std::string options[] = {"gd", "gt", "ue", "ut", "lt", "se", "st", "b"};
+    std::string options[] = {"gsd", "gt", "ue", "ut", "lt", "se", "st", "b", "ggd"};
     user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string));
     std::string search_string, search_message;
     int result[events.real_size], result_size;
@@ -507,6 +507,11 @@ int More_Options_Page()
         break;
     case 7:
         return 0;
+        break;
+    case 8:
+        *default_selected_date = (UserDateInput("Enter a date(date format: YYYY MM DD):", "Incorrect Date!", calendars.gregorian));
+        selected_day.ddate = DateToDay(*default_selected_date, calendars.gregorian);
+        selected_day.RegenerateDates();
         break;
     default:
         message = "UNKNOWN ERROR!";

@@ -137,7 +137,7 @@ int SystemDDate()
 
 int _date::IsVaild(_calendar &calendar)
 {
-    if (calendar.origin.year - year > 69 || month > 12 || month < 1 || day > MonthSize(calendar) || day < 1)
+    if (year - calendar.origin.year > 70 || month > 12 || month < 1 || day > MonthSize(calendar) || day < 1)
         return 0;
     return 1;
 }
