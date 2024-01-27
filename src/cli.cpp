@@ -160,7 +160,7 @@ _date UserDateInput(std::string prompt_text, std::string error_text, _calendar c
 
 void Header()
 {
-    std::cout << BOLD << "\t\t\tCalendar V2.4.9" << RESET << std::endl;
+    std::cout << BOLD << "\t\t\tCalendar " << VERSION << RESET << std::endl;
     Line();
 }
 void Line()

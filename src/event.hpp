@@ -18,13 +18,13 @@ struct _event
     // 4: undone, 5: done
     int id = 0;
 
-    std::string title; // title can't be empty and should only be one line
-    std::string description; // title can be empty and multiline
-    _date date; // start date of repeating events or specific date for type 0 or tasks
-    int ToggleDone(); // used to toggle status for tasks
+    std::string title;        // title can't be empty and should only be one line
+    std::string description;  // title can be empty and multiline
+    _date date;               // start date of repeating events or specific date for type 0 or tasks
+    int ToggleDone();         // used to toggle status for tasks
     int IsVaild(_calendar &); // verify that can an event be added to the list or not
 
-     // takes a date as argument and returns 1 if the event or tasks happens in the date 
+    // takes a date as argument and returns 1 if the event or tasks happens in the date
     int Occur(_date &second_date, _calendar &);
     int IsEvent();
     int IsTask();

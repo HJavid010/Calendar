@@ -126,7 +126,7 @@ int Home_Page()
 
     std::string options[] = {"n", "p", "ne", "nt", "de ", "dt ", "tt ", "ee ", "et ", "m", "q"};
     int argument;
-    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
+    user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string), &argument);
     std::string search_string;
     switch (user_input)
     {
@@ -258,7 +258,7 @@ int Event_Add_Page()
     new_event.date = *default_selected_date;
     std::string options[] = {"s", "y", "m", "w"};
 
-    new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", options, sizeof(options) / sizeof(std::string));
+    new_event.id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Incorrect Input!", options, sizeof(options) / sizeof(std::string));
     new_event.title = UserStringInput("Title: ", false, "Title can't be empty!");
     new_event.description = UserStringInput("Description (enter an empty line to end text): ");
 
@@ -328,7 +328,7 @@ int Event_Edit_Page(_event *event)
 
         std::string options[] = {"et", "ed", "ede", "ety", "d", "b"};
         int user_input;
-        user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string));
+        user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string));
         std::string type_options[] = {"s", "y", "m", "w"};
 
         switch (user_input)
@@ -338,7 +338,7 @@ int Event_Edit_Page(_event *event)
             edited = true;
             break;
         case 1:
-            event->date = UserDateInput("Enter a date:", "Incorrect! (date format: YYYY MM DD)", *default_calendar);
+            event->date = UserDateInput("Enter a date(date format: YYYY MM DD):", "Incorrect Date!", *default_calendar);
             if (event->date.year < default_calendar->origin.year)
                 event->date.year = default_calendar->origin.year;
             edited = true;
@@ -348,7 +348,7 @@ int Event_Edit_Page(_event *event)
             edited = true;
             break;
         case 3:
-            event->id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Wrong Input!", type_options, sizeof(options) / sizeof(std::string));
+            event->id = UserOptionInput("Event type: (S)pecific_date (Y)early (M)onthly (W)eekly: ", "Incorrect Input!", type_options, sizeof(options) / sizeof(std::string));
             edited = true;
             break;
         case 4:
@@ -384,7 +384,7 @@ int Task_Edit_Page(_event *event)
 
         std::string options[] = {"et", "ed", "ede", "t", "d", "b"};
         int user_input;
-        user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string));
+        user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string));
         std::string type_options[] = {"s", "y", "m", "w"};
 
         switch (user_input)
@@ -394,7 +394,7 @@ int Task_Edit_Page(_event *event)
             edited = true;
             break;
         case 1:
-            event->date = UserDateInput("Enter a date:", "Incorrect! (date format: YYYY MM DD)", *default_calendar);
+            event->date = UserDateInput("Enter a date(date format: YYYY MM DD):", "Incorrect Date!", *default_calendar);
             if (event->date.year < default_calendar->origin.year)
                 event->date.year = default_calendar->origin.year;
             edited = true;
@@ -436,6 +436,7 @@ int More_Options_Page()
     Line();
     std::cout << message << std::endl
               << "GD:\tGoto Date" << std::endl
+              << "GT:\tGoto Today" << std::endl
               << "UE:\tUpcoming Events" << std::endl
               << "UT:\tUpcoming Tasks" << std::endl
               << "LT:\tShow Late Tasks" << std::endl
@@ -444,18 +445,21 @@ int More_Options_Page()
               << "B:\tBack To Homepage" << std::endl
               << std::endl;
 
-    std::string options[] = {"gd", "ue", "ut", "lt", "se", "st", "b"};
-    user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string));
+    std::string options[] = {"gd", "gt", "ue", "ut", "lt", "se", "st", "b"};
+    user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string));
     std::string search_string, search_message;
     int result[events.real_size], result_size;
     switch (user_input)
     {
     case 0:
-        *default_selected_date = UserDateInput("Enter a date:", "Incorrect! (date format: YYYY MM DD)", *default_calendar);
+        *default_selected_date = UserDateInput("Enter a date(date format: YYYY MM DD):", "Incorrect Date!", *default_calendar);
         selected_day.ddate = DateToDay(*default_selected_date, *default_calendar);
         selected_day.RegenerateDates();
         break;
     case 1:
+        selected_day = today;
+        break;
+    case 2:
         search_message = "Upcoming Events";
         result_size = events.EventsOccurAfter(*default_today_date, result, *default_calendar);
         while (Event_Search_Show_Page(search_message, result, result_size))
@@ -463,7 +467,7 @@ int More_Options_Page()
             result_size = events.EventsOccurAfter(*default_today_date, result, *default_calendar);
         }
         break;
-    case 2:
+    case 3:
         search_message = "Upcoming Tasks";
         result_size = events.TasksOccurAfter(*default_today_date, result, *default_calendar);
         while (Task_Search_Show_Page(search_message, result, result_size))
@@ -471,7 +475,7 @@ int More_Options_Page()
             result_size = events.TasksOccurAfter(*default_today_date, result, *default_calendar);
         }
         break;
-    case 3:
+    case 4:
         search_message = "Late Undone Tasks";
         result_size = events.TasksLate(*default_today_date, result, *default_calendar);
         while (Task_Search_Show_Page(search_message, result, result_size))
@@ -479,7 +483,7 @@ int More_Options_Page()
             result_size = events.TasksLate(*default_today_date, result, *default_calendar);
         }
         break;
-    case 4:
+    case 5:
         search_string = UserStringInput("string to search:", false, "error!");
         search_message = "Searching \"";
         search_message.append(search_string);
@@ -490,7 +494,7 @@ int More_Options_Page()
             result_size = events.EventSearchByString(search_string, result);
         }
         break;
-    case 5:
+    case 6:
         search_string = UserStringInput("string to search:", false, "error!");
         search_message = "Searching \"";
         search_message.append(search_string);
@@ -501,7 +505,7 @@ int More_Options_Page()
             result_size = events.TaskSearchByString(search_string, result);
         }
         break;
-    case 6:
+    case 7:
         return 0;
         break;
     default:
@@ -563,7 +567,7 @@ int Event_Search_Show_Page(std::string search_messsage, int result[], int result
 
         std::string options[] = {"e ", "d ", "b"};
         int argument, user_input;
-        user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
+        user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string), &argument);
         switch (user_input)
         {
         case 0:
@@ -651,7 +655,7 @@ int Task_Search_Show_Page(std::string search_messsage, int result[], int result_
 
         std::string options[] = {"e ", "d ", "t ", "b"};
         int argument, user_input;
-        user_input = UserOptionInput(COMMAND_STRING, "Incorrect command!", options, sizeof(options) / sizeof(std::string), &argument);
+        user_input = UserOptionInput(COMMAND_STRING, "Incorrect Command!", options, sizeof(options) / sizeof(std::string), &argument);
         switch (user_input)
         {
         case 0:

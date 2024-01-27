@@ -66,7 +66,7 @@ _date DayToDate(int ddate, _calendar &);
 // DayToDate function gets a date and returns a ddate according to calendar
 int DateToDay(_date, _calendar &);
 
-// SystemDDate return system ddate 
+// SystemDDate return system ddate
 int SystemDDate();
 
 #endif
